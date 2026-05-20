@@ -373,40 +373,67 @@ function gerarRelatorioHTML() {
 
 async function gerarPDF() {
   if (typeof html2pdf === "undefined") {
-    alert(
-      "Biblioteca html2pdf não encontrada."
-    );
-
+    alert("Biblioteca html2pdf não encontrada.");
     return;
   }
 
-  const container = document.createElement("div");
+  const pdfContainer =
+    document.createElement("div");
 
-  container.innerHTML = gerarRelatorioHTML();
+  pdfContainer.id = "pdf-temp";
+
+  pdfContainer.style.background =
+    "#ffffff";
+
+  pdfContainer.style.color =
+    "#111111";
+
+  pdfContainer.style.padding =
+    "40px";
+
+  pdfContainer.style.width =
+    "210mm";
+
+  pdfContainer.innerHTML =
+    gerarRelatorioHTML();
+
+  document.body.appendChild(
+    pdfContainer
+  );
 
   const options = {
-    margin: 0.5,
-    filename: "relatorio-atendimento.pdf",
+    margin: 0.3,
+
+    filename:
+      "relatorio-atendimento.pdf",
+
     image: {
       type: "jpeg",
       quality: 1,
     },
+
     html2canvas: {
       scale: 2,
+      useCORS: true,
     },
+
     jsPDF: {
-      unit: "in",
+      unit: "mm",
       format: "a4",
-      orientation: "portrait",
+      orientation:
+        "portrait",
     },
   };
 
-  await html2pdf()
-    .set(options)
-    .from(container)
-    .save();
+  try {
+    await html2pdf()
+      .set(options)
+      .from(pdfContainer)
+      .save();
+  } finally {
+    pdfContainer.remove();
+  }
 }
-
 /* =========================================================
    🚀 INIT
 ========================================================= */
