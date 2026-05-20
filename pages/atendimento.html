@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Comitê de Atendimento • Sangue Carmesim
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="/css/atendimento.css"
+  />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen text-white">
+
+  <main class="max-w-7xl mx-auto px-6 py-10">
+
+    <!-- HEADER -->
+    <header class="mb-12">
+
+      <a
+        href="../index.html"
+        class="inline-flex items-center gap-2 text-zinc-400 hover:text-red-400 transition-colors mb-6"
+      >
+        ← Voltar
+      </a>
+
+      <div class="flex items-center gap-5">
+
+        <div
+          class="w-16 h-16 rounded-3xl bg-red-900/20 border border-red-800/30 flex items-center justify-center text-3xl"
+        >
+          💬
+        </div>
+
+        <div>
+          <h1 class="text-4xl font-black">
+            Comitê de Atendimento
+          </h1>
+
+          <p class="text-zinc-400 mt-2">
+            Relatório mensal operacional
+          </p>
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- FORM -->
+    <form
+      id="relatorio-form"
+      class="space-y-10"
+    >
+
+      <!-- DADOS GERAIS -->
+      <section class="glass section-border rounded-3xl p-8 border border-zinc-800">
+
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold mb-2">
+            Informações gerais
+          </h2>
+
+          <p class="text-zinc-500">
+            Dados principais do relatório mensal.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <div>
+            <label class="input-label">
+              Mês
+            </label>
+
+            <input
+              id="mes"
+              type="text"
+              placeholder="Ex: Maio"
+              class="input"
+            />
+          </div>
+
+          <div>
+            <label class="input-label">
+              Ano
+            </label>
+
+            <input
+              id="ano"
+              type="number"
+              placeholder="2026"
+              class="input"
+            />
+          </div>
+
+          <div>
+            <label class="input-label">
+              Meta de atendimento
+            </label>
+
+            <input
+              id="meta"
+              type="text"
+              placeholder="Ex: 150 atendimentos"
+              class="input"
+            />
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- SEMANAS -->
+      <div class="space-y-8">
+
+        <!-- SEMANAS DINÂMICAS -->
+        <section
+          class="glass section-border rounded-3xl p-8 border border-zinc-800"
+        >
+
+          <div class="flex items-center justify-between mb-8">
+
+            <div>
+              <h2 class="text-2xl font-bold">
+                📇 Semanas
+              </h2>
+
+              <p class="text-zinc-500 mt-1">
+                Registre as contribuições semanais.
+              </p>
+            </div>
+
+          </div>
+
+          <div class="space-y-10">
+
+            <!-- LOOP DE SEMANAS -->
+            <div
+              class="space-y-6"
+              data-semana-wrapper="1"
+            >
+
+              <div class="flex items-center justify-between">
+
+                <h3 class="text-xl font-bold">
+                  1ª Semana
+                </h3>
+
+                <button
+                  type="button"
+                  data-add-adm="1"
+                  class="add-button"
+                >
+                  + Adicionar ADM
+                </button>
+
+              </div>
+
+              <div
+                class="space-y-6"
+                data-semana="1"
+              ></div>
+
+            </div>
+
+            <div
+              class="space-y-6"
+              data-semana-wrapper="2"
+            >
+
+              <div class="flex items-center justify-between">
+
+                <h3 class="text-xl font-bold">
+                  2ª Semana
+                </h3>
+
+                <button
+                  type="button"
+                  data-add-adm="2"
+                  class="add-button"
+                >
+                  + Adicionar ADM
+                </button>
+
+              </div>
+
+              <div
+                class="space-y-6"
+                data-semana="2"
+              ></div>
+
+            </div>
+
+            <div
+              class="space-y-6"
+              data-semana-wrapper="3"
+            >
+
+              <div class="flex items-center justify-between">
+
+                <h3 class="text-xl font-bold">
+                  3ª Semana
+                </h3>
+
+                <button
+                  type="button"
+                  data-add-adm="3"
+                  class="add-button"
+                >
+                  + Adicionar ADM
+                </button>
+
+              </div>
+
+              <div
+                class="space-y-6"
+                data-semana="3"
+              ></div>
+
+            </div>
+
+            <div
+              class="space-y-6"
+              data-semana-wrapper="4"
+            >
+
+              <div class="flex items-center justify-between">
+
+                <h3 class="text-xl font-bold">
+                  4ª Semana
+                </h3>
+
+                <button
+                  type="button"
+                  data-add-adm="4"
+                  class="add-button"
+                >
+                  + Adicionar ADM
+                </button>
+
+              </div>
+
+              <div
+                class="space-y-6"
+                data-semana="4"
+              ></div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- FALTAS -->
+      <section class="glass section-border rounded-3xl p-8 border border-zinc-800">
+
+        <div class="flex items-center justify-between mb-8">
+
+          <div>
+            <h2 class="text-2xl font-bold">
+              ⚠️ Faltas cometidas
+            </h2>
+
+            <p class="text-zinc-500 mt-1">
+              Registre ocorrências e advertências.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            id="add-falta"
+            class="add-button"
+          >
+            + Adicionar falta
+          </button>
+
+        </div>
+
+        <div
+          id="faltas-container"
+          class="space-y-6"
+        ></div>
+
+      </section>
+
+      <!-- OBS -->
+      <section class="glass section-border rounded-3xl p-8 border border-zinc-800">
+
+        <div class="mb-6">
+
+          <h2 class="text-2xl font-bold">
+            📝 Observações finais
+          </h2>
+
+          <p class="text-zinc-500 mt-1">
+            Informações complementares do relatório.
+          </p>
+
+        </div>
+
+        <textarea
+          id="observacoes"
+          rows="6"
+          placeholder="Digite observações adicionais..."
+          class="textarea"
+        ></textarea>
+
+      </section>
+
+      <!-- ACTIONS -->
+      <section class="flex flex-col md:flex-row gap-4 justify-end">
+
+        <button
+          type="button"
+          class="secondary-button"
+        >
+          Salvar rascunho
+        </button>
+
+        <button
+          type="button"
+          id="gerar-pdf"
+          class="primary-button"
+        >
+          📄 Gerar relatório PDF
+        </button>
+
+      </section>
+
+    </form>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script src="../js/app.js"></script>
+
+</body>
+
+</html>

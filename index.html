@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Sangue Carmesim • Comitês</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen text-white">
+
+    <div class="absolute top-0 left-0 w-72 h-72 bg-red-900/20 blur-3xl rounded-full blood-orb"></div>
+
+    <main class="relative z-10 px-6 py-10">
+
+        <!-- HEADER -->
+        <header class="max-w-6xl mx-auto mb-16">
+
+            <div class="flex items-center gap-4 mb-6">
+                <div
+                    class="w-14 h-14 rounded-2xl bg-red-900/30 border border-red-800/40 flex items-center justify-center text-2xl shadow-lg shadow-red-950/40">
+                    🩸
+                </div>
+
+                <div>
+                    <h1 class="text-4xl font-black tracking-wide">
+                        Sangue Carmesim
+                    </h1>
+
+                    <p class="text-zinc-400 mt-1">
+                        Sistema de Relatórios dos Comitês
+                    </p>
+                </div>
+            </div>
+
+            <div class="w-full h-px bg-gradient-to-r from-red-900/0 via-red-800/60 to-red-900/0"></div>
+        </header>
+
+        <!-- HERO -->
+        <section class="max-w-6xl mx-auto mb-14">
+
+            <div
+                class="bg-zinc-900/60 border border-zinc-800 rounded-3xl p-8 backdrop-blur-xl shadow-2xl shadow-black/40">
+
+                <div class="max-w-3xl">
+                    <span
+                        class="inline-flex items-center gap-2 text-sm text-red-300 bg-red-950/40 border border-red-900/50 px-4 py-2 rounded-full mb-6">
+                        ⚔️ Plataforma Operacional Carmesim
+                    </span>
+
+                    <h2 class="text-5xl font-black leading-tight mb-6">
+                        Central de relatórios
+                        <span class="text-red-500">
+                            dos comitês
+                        </span>
+                    </h2>
+
+                    <p class="text-zinc-400 text-lg leading-relaxed">
+                        Gere relatórios mensais completos com análises automáticas,
+                        métricas organizacionais, gráficos e exportação em PDF.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- COMITÊS -->
+        <section class="max-w-6xl mx-auto">
+
+            <div class="flex items-center justify-between mb-8">
+
+                <div>
+                    <h3 class="text-2xl font-bold">
+                        Comitês disponíveis
+                    </h3>
+
+                    <p class="text-zinc-500 mt-1">
+                        Escolha um comitê para iniciar o relatório.
+                    </p>
+                </div>
+
+                <div class="text-sm text-zinc-600">
+                    v1.0
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                <!-- ATENDIMENTO -->
+                <a href="/pages/atendimento.html"
+                    class="card-glow group relative bg-zinc-900/70 border border-zinc-800 rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 hover:border-red-700/40 hover:shadow-2xl hover:shadow-red-950/20">
+
+                    <div class="flex items-start justify-between mb-8">
+
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-red-900/20 border border-red-800/30 flex items-center justify-center text-3xl">
+                            💬
+                        </div>
+
+                        <span
+                            class="text-xs font-semibold tracking-wide uppercase text-emerald-300 bg-emerald-950/40 border border-emerald-900/40 px-3 py-1 rounded-full">
+                            Ativo
+                        </span>
+
+                    </div>
+
+                    <h4 class="text-2xl font-bold mb-3 group-hover:text-red-400 transition-colors">
+                        Atendimento
+                    </h4>
+
+                    <p class="text-zinc-400 leading-relaxed mb-6">
+                        Relatórios mensais com métricas de contribuição,
+                        cumprimento de prazo, faltas e desempenho semanal.
+                    </p>
+
+                    <div class="flex items-center gap-2 text-red-400 font-medium">
+                        Acessar sistema
+                        <span class="transition-transform group-hover:translate-x-1">
+                            →
+                        </span>
+                    </div>
+
+                </a>
+
+                <!-- EVENTOS -->
+                <a href="./pages/eventos.html"
+                    class="card-glow group relative bg-zinc-900/70 border border-zinc-800 rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 hover:border-red-700/40 hover:shadow-2xl hover:shadow-red-950/20">
+
+                    <div class="flex items-start justify-between mb-8">
+
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-red-900/20 border border-red-800/30 flex items-center justify-center text-3xl">
+                            🎭
+                        </div>
+
+                        <span
+                            class="text-xs font-semibold tracking-wide uppercase text-emerald-300 bg-emerald-950/40 border border-emerald-900/40 px-3 py-1 rounded-full">
+                            Ativo
+                        </span>
+
+                    </div>
+
+                    <h4 class="text-2xl font-bold mb-3 group-hover:text-red-400 transition-colors">
+                        Eventos
+                    </h4>
+
+                    <p class="text-zinc-400 leading-relaxed mb-6">
+                        Relátórios de eventos e desempenho mensal, com gráficos de evolução e exportação em PDF.
+                    </p>
+
+                    <div class="flex items-center gap-2 text-red-400 font-medium">
+                        Acessar sistema
+                        <span class="transition-transform group-hover:translate-x-1">
+                            →
+                        </span>
+                    </div>
+
+                </a>
+
+                <!-- Somas -->
+                <a href="./pages/somas.html"
+                    class="card-glow group relative bg-zinc-900/70 border border-zinc-800 rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 hover:border-red-700/40 hover:shadow-2xl hover:shadow-red-950/20">
+
+                    <div class="flex items-start justify-between mb-8">
+
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-red-900/20 border border-red-800/30 flex items-center justify-center text-3xl">
+                            🧮
+                        </div>
+
+                        <span
+                            class="text-xs font-semibold tracking-wide uppercase text-emerald-300 bg-emerald-950/40 border border-emerald-900/40 px-3 py-1 rounded-full">
+                            Ativo
+                        </span>
+
+                    </div>
+
+                    <h4 class="text-2xl font-bold mb-3 group-hover:text-red-400 transition-colors">
+                        Comitê de Somas
+                    </h4>
+
+                    <p class="text-zinc-400 leading-relaxed mb-6">
+                        Relatórios de cálculos, desempenho,
+                        pontuação e produtividade mensal.
+                    </p>
+
+                    <div class="flex items-center gap-2 text-red-400 font-medium">
+                        Acessar sistema
+                        <span class="transition-transform group-hover:translate-x-1">
+                            →
+                        </span>
+                    </div>
+
+                </a>
+
+                <!-- Compras e vendas -->
+                <a href="./pages/compras.html"
+                    class="group relative overflow-hidden rounded-[2rem] border border-zinc-800 bg-zinc-950/70 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-amber-700/40 hover:bg-zinc-900/90">
+
+                    <!-- GLOW -->
+                    <div
+                        class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_top,rgba(251,191,36,0.15),transparent_55%)]">
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="relative z-10">
+
+                        <!-- ICON -->
+                        <div
+                            class="mb-6 flex h-16 w-16 items-center justify-center rounded-3xl border border-amber-700/30 bg-amber-900/10 text-3xl shadow-lg shadow-amber-950/20">
+                            📦
+                        </div>
+
+                        <!-- TITLE -->
+                        <div class="mb-4">
+
+                            <h2
+                                class="text-2xl font-black tracking-tight text-white transition-colors duration-300 group-hover:text-amber-300">
+                                Compras & Vendas
+                            </h2>
+
+                            <p class="mt-2 text-sm leading-relaxed text-zinc-400">
+                                Gestão de pedidos, entregas, contribuintes ativos e produtividade operacional do comitê.
+                            </p>
+
+                        </div>
+
+                        <!-- TAGS -->
+                        <div class="flex flex-wrap gap-2">
+
+                            <span
+                                class="rounded-full border border-zinc-700 bg-zinc-900/80 px-3 py-1 text-xs font-medium text-zinc-300">
+                                Relatórios
+                            </span>
+
+                            <span
+                                class="rounded-full border border-amber-800/30 bg-amber-950/20 px-3 py-1 text-xs font-medium text-amber-300">
+                                Operacional
+                            </span>
+
+                            <span
+                                class="rounded-full border border-red-800/30 bg-red-950/20 px-3 py-1 text-xs font-medium text-red-300">
+                                PDF
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BORDER EFFECT -->
+                    <div class="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-white/5">
+                    </div>
+
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

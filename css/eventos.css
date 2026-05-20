@@ -1,0 +1,558 @@
+/* =========================================================
+   🎭 SANGUE CARMESIM • COMITÊ DE EVENTOS
+========================================================= */
+
+:root {
+  --background: #040404;
+
+  --surface: rgba(18, 18, 20, 0.76);
+  --surface-solid: #09090b;
+
+  --border: rgba(63, 63, 70, 0.72);
+
+  --primary: rgb(220, 38, 38);
+  --primary-soft: rgba(220, 38, 38, 0.18);
+
+  --accent: rgb(239, 68, 68);
+
+  --text: #ffffff;
+  --text-muted: #a1a1aa;
+
+  --success: rgb(34, 197, 94);
+  --warning: rgb(234, 179, 8);
+
+  --shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45);
+
+  --transition:
+    180ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+}
+
+/* =========================================================
+   🌌 RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+
+  color: var(--text);
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(127, 29, 29, 0.22),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(185, 28, 28, 0.08),
+      transparent 28%
+    ),
+    var(--background);
+
+  background-attachment: fixed;
+
+  text-rendering: optimizeLegibility;
+
+  -webkit-font-smoothing: antialiased;
+
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   ✨ GLASS
+========================================================= */
+
+.glass {
+  position: relative;
+
+  background: var(--surface);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: var(--shadow);
+
+  isolation: isolate;
+}
+
+/* =========================================================
+   🩸 BORDER EFFECT
+========================================================= */
+
+.section-border {
+  position: relative;
+}
+
+.section-border::before {
+  content: "";
+
+  position: absolute;
+  inset: -1px;
+
+  border-radius: inherit;
+
+  padding: 1px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 0, 76, 0.22),
+      rgba(255, 255, 255, 0.03)
+    );
+
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   ✍️ TYPOGRAPHY
+========================================================= */
+
+.title-gradient {
+  background:
+    linear-gradient(
+      to right,
+      #ffffff,
+      #ef4444
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* =========================================================
+   📥 INPUTS
+========================================================= */
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+
+  color: var(--text);
+
+  background: var(--surface-solid);
+
+  border: 1px solid var(--border);
+
+  transition:
+    border-color var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition),
+    background var(--transition);
+
+  appearance: none;
+}
+
+.input {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+}
+
+.select {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+}
+
+.textarea {
+  min-height: 140px;
+
+  padding: 1.2rem;
+
+  border-radius: 1.5rem;
+
+  resize: vertical;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #71717a;
+}
+
+.input:hover,
+.textarea:hover,
+.select:hover {
+  border-color: rgba(113, 113, 122, 0.95);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+
+  border-color:
+    rgba(239, 68, 68, 0.55);
+
+  box-shadow:
+    0 0 0 4px rgba(127, 29, 29, 0.22);
+
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   🏷️ LABELS
+========================================================= */
+
+.input-label {
+  display: block;
+
+  font-size: 0.92rem;
+  font-weight: 500;
+
+  color: var(--text-muted);
+
+  margin-bottom: 0.7rem;
+}
+
+/* =========================================================
+   🔘 BUTTONS
+========================================================= */
+
+button {
+  cursor: pointer;
+
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    opacity var(--transition);
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.primary-button {
+  background:
+    linear-gradient(
+      135deg,
+      rgb(185, 28, 28),
+      rgb(127, 29, 29)
+    );
+
+  border: 1px solid rgba(239, 68, 68, 0.28);
+
+  color: white;
+
+  padding: 1rem 2rem;
+
+  border-radius: 1.25rem;
+
+  font-weight: 700;
+
+  box-shadow:
+    0 12px 30px rgba(127, 29, 29, 0.34);
+}
+
+.primary-button:hover {
+  box-shadow:
+    0 18px 40px rgba(127, 29, 29, 0.42);
+}
+
+.secondary-button {
+  background: rgba(39, 39, 42, 0.82);
+
+  border: 1px solid rgba(82, 82, 91, 0.65);
+
+  color: white;
+
+  padding: 1rem 2rem;
+
+  border-radius: 1.25rem;
+
+  font-weight: 600;
+}
+
+.secondary-button:hover {
+  background: rgba(63, 63, 70, 0.9);
+}
+
+.add-button {
+  background:
+    rgba(127, 29, 29, 0.18);
+
+  border:
+    1px solid rgba(127, 29, 29, 0.34);
+
+  color:
+    rgb(252, 165, 165);
+
+  padding:
+    0.85rem 1.2rem;
+
+  border-radius: 1rem;
+
+  font-weight: 600;
+}
+
+.add-button:hover {
+  background:
+    rgba(127, 29, 29, 0.28);
+}
+
+/* =========================================================
+   📦 EVENT CARD
+========================================================= */
+
+.event-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(24, 24, 27, 0.96),
+      rgba(10, 10, 10, 0.96)
+    );
+
+  border:
+    1px solid rgba(63, 63, 70, 0.72);
+
+  border-radius: 1.8rem;
+
+  padding: 1.8rem;
+
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+
+  border-color:
+    rgba(220, 38, 38, 0.35);
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.event-card::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(220, 38, 38, 0.06),
+      transparent 30%
+    );
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   📊 METRIC CARDS
+========================================================= */
+
+.metric-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(24, 24, 27, 0.95),
+      rgba(10, 10, 10, 0.95)
+    );
+
+  border:
+    1px solid rgba(63, 63, 70, 0.7);
+
+  border-radius: 1.5rem;
+
+  padding: 1.6rem;
+
+  transition:
+    transform var(--transition),
+    border-color var(--transition);
+}
+
+.metric-card:hover {
+  transform: translateY(-3px);
+
+  border-color:
+    rgba(220, 38, 38, 0.3);
+}
+
+.metric-title {
+  color: var(--text-muted);
+
+  font-size: 0.92rem;
+
+  margin-bottom: 0.55rem;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+/* =========================================================
+   🧾 REMOVE BUTTON
+========================================================= */
+
+.remove-button {
+  width: 100%;
+
+  margin-top: 1.5rem;
+
+  padding: 0.95rem;
+
+  border-radius: 1rem;
+
+  background:
+    rgba(127, 29, 29, 0.18);
+
+  border:
+    1px solid rgba(127, 29, 29, 0.32);
+
+  color:
+    rgb(252, 165, 165);
+
+  font-weight: 600;
+}
+
+.remove-button:hover {
+  background:
+    rgba(127, 29, 29, 0.3);
+}
+
+/* =========================================================
+   ✨ ANIMATIONS
+========================================================= */
+
+.animate-fade {
+  animation: fadeIn 240ms ease;
+}
+
+.animate-slide {
+  animation: slideUp 320ms ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   📜 SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(127, 29, 29, 0.9),
+      rgba(69, 10, 10, 1)
+    );
+
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(185, 28, 28, 0.95),
+      rgba(127, 29, 29, 1)
+    );
+}
+
+/* =========================================================
+   📱 RESPONSIVE
+========================================================= */
+
+@media (max-width: 1024px) {
+  .metric-value {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    background:
+      radial-gradient(
+        circle at top,
+        rgba(120, 0, 0, 0.18),
+        transparent 42%
+      ),
+      var(--background);
+  }
+
+  .glass {
+    backdrop-filter: blur(10px);
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+  .event-card {
+    padding: 1.4rem;
+  }
+}

@@ -1,0 +1,47 @@
+    body {
+      background:
+        radial-gradient(circle at top, rgba(120, 0, 0, 0.35), transparent 40%),
+        #060606;
+    }
+
+    .card-glow {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-glow::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 1.5rem;
+      padding: 1px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 0, 76, 0.4),
+        rgba(255, 255, 255, 0.05)
+      );
+
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .blood-orb {
+      animation: pulseOrb 4s infinite ease-in-out;
+    }
+
+    @keyframes pulseOrb {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+
+      50% {
+        transform: scale(1.2);
+        opacity: 0.9;
+      }
+    }

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        Comitê de Somas • Sangue Carmesim
+    </title>
+
+    <link rel="stylesheet" href="../css/somas.css" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <!-- HEADER -->
+        <header class="mb-12">
+
+            <a href="../index.html"
+                class="inline-flex items-center gap-2 text-zinc-400 hover:text-red-400 transition-colors mb-6">
+                ← Voltar
+            </a>
+
+            <div class="flex items-center gap-5">
+
+                <div
+                    class="w-16 h-16 rounded-3xl bg-red-900/20 border border-red-800/30 flex items-center justify-center text-3xl">
+                    🧮
+                </div>
+
+                <div>
+
+                    <h1 class="text-4xl font-black title-gradient">
+                        Comitê de Somas
+                    </h1>
+
+                    <p class="text-zinc-400 mt-2">
+                        Relatório mensal de cálculos e desempenho
+                    </p>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- FORM -->
+        <form id="relatorio-somas-form" class="space-y-10">
+
+            <!-- INFORMAÇÕES -->
+            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+                <div class="mb-8">
+
+                    <h2 class="text-2xl font-bold mb-2">
+                        Informações gerais
+                    </h2>
+
+                    <p class="text-zinc-500">
+                        Dados principais do relatório mensal.
+                    </p>
+
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div>
+
+                        <label class="input-label">
+                            Mês
+                        </label>
+
+                        <input type="text" placeholder="Ex: Maio" class="input" />
+
+                    </div>
+
+                    <div>
+
+                        <label class="input-label">
+                            Quantidade total de relatórios
+                        </label>
+
+                        <input type="number" placeholder="Ex: 250" class="input" />
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- SEMANAS -->
+            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+                <div class="mb-10">
+
+                    <h2 class="text-2xl font-bold mb-2">
+                        📇 Relatórios semanais
+                    </h2>
+
+                    <p class="text-zinc-500">
+                        Quantidade de relatórios calculados semanalmente.
+                    </p>
+
+                </div>
+
+                <div class="space-y-8">
+
+                    <!-- SEMANA -->
+                    <div class="metric-card">
+
+                        <div class="flex items-center justify-between mb-6">
+
+                            <h3 class="text-xl font-bold">
+                                1ª Semana
+                            </h3>
+
+                            <span
+                                class="text-xs uppercase tracking-wider text-red-300 bg-red-950/40 border border-red-900/40 px-3 py-1 rounded-full">
+                                Semana ativa
+                            </span>
+
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre ADMs aleatórios
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre ADMs FIXO
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre membros comuns
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- 2 -->
+                    <div class="metric-card">
+
+                        <div class="flex items-center justify-between mb-6">
+
+                            <h3 class="text-xl font-bold">
+                                2ª Semana
+                            </h3>
+
+                            <span
+                                class="text-xs uppercase tracking-wider text-red-300 bg-red-950/40 border border-red-900/40 px-3 py-1 rounded-full">
+                                Semana ativa
+                            </span>
+
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre ADMs aleatórios
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre ADMs FIXO
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre membros comuns
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- 3 -->
+                    <div class="metric-card">
+
+                        <div class="flex items-center justify-between mb-6">
+
+                            <h3 class="text-xl font-bold">
+                                3ª Semana
+                            </h3>
+
+                            <span
+                                class="text-xs uppercase tracking-wider text-red-300 bg-red-950/40 border border-red-900/40 px-3 py-1 rounded-full">
+                                Semana ativa
+                            </span>
+
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre ADMs aleatórios
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre ADMs FIXO
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                            <div>
+
+                                <label class="input-label">
+                                    Relatórios sobre membros comuns
+                                </label>
+
+                                <input type="number" class="input" placeholder="0" />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- 4 -->
+                    <div class="metric-card border-yellow-900/30 bg-yellow-950/10">
+
+                        <div class="flex items-center gap-4">
+
+                            <div class="text-3xl">
+                                ⚠️
+                            </div>
+
+                            <div>
+
+                                <h3 class="text-xl font-bold text-yellow-300">
+                                    4ª Semana
+                                </h3>
+
+                                <p class="text-yellow-100/70 mt-1">
+                                    Pausa operacional registrada para esta semana.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- MEMBROS -->
+            <!-- MEMBROS -->
+            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+                <div class="flex items-center justify-between mb-8">
+
+                    <div>
+
+                        <h2 class="text-2xl font-bold mb-2">
+                            👥 Quantidade por membro
+                        </h2>
+
+                        <p class="text-zinc-500">
+                            Quantidade total calculada por integrante.
+                        </p>
+
+                    </div>
+
+                    <button type="button" id="add-membro" class="add-button">
+                        + Adicionar membro
+                    </button>
+
+                </div>
+
+                <div id="membros-container" class="space-y-6"></div>
+
+            </section>
+
+            <!-- DESTAQUES -->
+            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+                <div class="mb-8">
+
+                    <h2 class="text-2xl font-bold mb-2">
+                        🏆 Destaques do mês
+                    </h2>
+
+                    <p class="text-zinc-500">
+                        Resultados finais após possíveis subtrações.
+                    </p>
+
+                </div>
+
+                <div class="space-y-6">
+
+                    <div>
+
+                        <label class="input-label">
+                            Top 3 membros com mais pontos
+                        </label>
+
+                        <textarea class="textarea" placeholder="Digite os membros..."></textarea>
+
+                    </div>
+
+                    <div>
+
+                        <label class="input-label">
+                            Top 3 ADMs com mais pontos
+                        </label>
+
+                        <textarea class="textarea" placeholder="Digite os ADMs..."></textarea>
+
+                    </div>
+
+                    <div>
+
+                        <label class="input-label">
+                            2 membros que mais se destacaram
+                        </label>
+
+                        <textarea class="textarea" placeholder="Responsabilidade, pontualidade, educação..."></textarea>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- FALTAS -->
+            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+                <div class="flex items-center justify-between mb-8">
+
+                    <div>
+
+                        <h2 class="text-2xl font-bold mb-2">
+                            ⚠️ Faltas cometidas
+                        </h2>
+
+                        <p class="text-zinc-500">
+                            Registro de ocorrências do mês.
+                        </p>
+
+                    </div>
+
+                    <button type="button" class="add-button">
+                        + Adicionar falta
+                    </button>
+
+                </div>
+
+                <div class="space-y-6">
+
+                    <div class="metric-card">
+
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+                            <input type="text" class="input" placeholder="Membro em questão" />
+
+                            <input type="text" class="input" placeholder="O que aconteceu?" />
+
+                            <input type="number" class="input" placeholder="Quantidade" />
+
+                            <select class="select">
+                                <option>
+                                    Aplicou advertência?
+                                </option>
+
+                                <option>
+                                    Sim
+                                </option>
+
+                                <option>
+                                    Não
+                                </option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- OBS -->
+            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+                <div class="mb-6">
+
+                    <h2 class="text-2xl font-bold mb-2">
+                        📝 Observações finais
+                    </h2>
+
+                    <p class="text-zinc-500">
+                        Informações complementares do relatório.
+                    </p>
+
+                </div>
+
+                <textarea class="textarea" placeholder="Digite observações adicionais..."></textarea>
+
+            </section>
+
+            <!-- ACTIONS -->
+            <section class="flex flex-col md:flex-row gap-4 justify-end">
+
+                <button type="button" class="secondary-button">
+                    Salvar rascunho
+                </button>
+
+                <button type="button" id="gerar-pdf" class="primary-button">
+                    📄 Gerar relatório PDF
+                </button>
+
+            </section>
+
+        </form>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script src="../js/somas.js"></script>
+
+</body>
+
+</html>

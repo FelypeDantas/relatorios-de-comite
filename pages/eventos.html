@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Comitê de Eventos • Sangue Carmesim
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="../css/eventos.css"
+  />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen text-white">
+
+  <main class="max-w-7xl mx-auto px-6 py-10">
+
+    <!-- HEADER -->
+    <header class="mb-12">
+
+      <a
+        href="../index.html"
+        class="inline-flex items-center gap-2 text-zinc-400 hover:text-red-400 transition-colors mb-6"
+      >
+        ← Voltar
+      </a>
+
+      <div class="flex items-center gap-5">
+
+        <div
+          class="w-16 h-16 rounded-3xl bg-red-900/20 border border-red-800/30 flex items-center justify-center text-3xl"
+        >
+          🎭
+        </div>
+
+        <div>
+
+          <h1 class="text-4xl font-black title-gradient">
+            Comitê de Eventos
+          </h1>
+
+          <p class="text-zinc-400 mt-2">
+            Relatório mensal de organização e execução de eventos
+          </p>
+
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- FORM -->
+    <form
+      id="relatorio-eventos-form"
+      class="space-y-10"
+    >
+
+      <!-- INFORMAÇÕES -->
+      <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+        <div class="mb-8">
+
+          <h2 class="text-2xl font-bold mb-2">
+            Informações gerais
+          </h2>
+
+          <p class="text-zinc-500">
+            Dados principais do relatório mensal.
+          </p>
+
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div>
+
+            <label class="input-label">
+              Mês
+            </label>
+
+            <input
+              id="mes"
+              type="text"
+              placeholder="Ex: Maio"
+              class="input"
+            />
+
+          </div>
+
+          <div>
+
+            <label class="input-label">
+              Ano
+            </label>
+
+            <input
+              id="ano"
+              type="number"
+              placeholder="2026"
+              class="input"
+            />
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- EVENTOS -->
+      <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+        <div class="flex items-center justify-between mb-8">
+
+          <div>
+
+            <h2 class="text-2xl font-bold mb-2">
+              🎭 Eventos realizados
+            </h2>
+
+            <p class="text-zinc-500">
+              Registre os eventos realizados durante o mês.
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            id="add-evento"
+            class="add-button"
+          >
+            + Adicionar evento
+          </button>
+
+        </div>
+
+        <div
+          id="eventos-container"
+          class="space-y-8"
+        ></div>
+
+      </section>
+
+      <!-- RESUMO -->
+      <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+        <div class="mb-6">
+
+          <h2 class="text-2xl font-bold mb-2">
+            📋 Resumo geral
+          </h2>
+
+          <p class="text-zinc-500">
+            Descreva os resultados gerais do mês.
+          </p>
+
+        </div>
+
+        <textarea
+          id="resumo-geral"
+          class="textarea"
+          placeholder="Digite um resumo geral do mês..."
+        ></textarea>
+
+      </section>
+
+      <!-- FALTAS -->
+      <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+        <div class="flex items-center justify-between mb-8">
+
+          <div>
+
+            <h2 class="text-2xl font-bold mb-2">
+              ⚠️ Faltas cometidas
+            </h2>
+
+            <p class="text-zinc-500">
+              Registre ocorrências e advertências.
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            id="add-falta"
+            class="add-button"
+          >
+            + Adicionar falta
+          </button>
+
+        </div>
+
+        <div
+          id="faltas-container"
+          class="space-y-6"
+        ></div>
+
+      </section>
+
+      <!-- OBSERVAÇÕES -->
+      <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+
+        <div class="mb-6">
+
+          <h2 class="text-2xl font-bold mb-2">
+            📝 Observações finais
+          </h2>
+
+          <p class="text-zinc-500">
+            Informações complementares do relatório.
+          </p>
+
+        </div>
+
+        <textarea
+          id="observacoes"
+          class="textarea"
+          placeholder="Digite observações adicionais..."
+        ></textarea>
+
+      </section>
+
+      <!-- MÉTRICAS -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="metric-card">
+
+          <p class="metric-title">
+            Eventos realizados
+          </p>
+
+          <h3
+            id="metrica-eventos"
+            class="metric-value"
+          >
+            0
+          </h3>
+
+        </div>
+
+        <div class="metric-card">
+
+          <p class="metric-title">
+            Participantes ativos
+          </p>
+
+          <h3
+            id="metrica-participantes"
+            class="metric-value"
+          >
+            0
+          </h3>
+
+        </div>
+
+        <div class="metric-card">
+
+          <p class="metric-title">
+            Faltas registradas
+          </p>
+
+          <h3
+            id="metrica-faltas"
+            class="metric-value"
+          >
+            0
+          </h3>
+
+        </div>
+
+      </section>
+
+      <!-- ACTIONS -->
+      <section class="flex flex-col md:flex-row gap-4 justify-end">
+
+        <button
+          type="button"
+          class="secondary-button"
+        >
+          Salvar rascunho
+        </button>
+
+        <button
+          type="button"
+          id="gerar-pdf"
+          class="primary-button"
+        >
+          📄 Gerar relatório PDF
+        </button>
+
+      </section>
+
+    </form>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script src="../js/eventos.js"></script>
+
+</body>
+
+</html>
