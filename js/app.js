@@ -562,81 +562,106 @@ function gerarRelatorioHTML() {
    📄 PDF
 ========================================================= */
 
+/* =========================================================
+   📄 PDF
+========================================================= */
+
 async function gerarPDF() {
   if (typeof html2pdf === "undefined") {
-    alert(
-      "Biblioteca html2pdf não encontrada."
-    );
-
+    alert("Biblioteca html2pdf não encontrada.");
     return;
   }
 
-  const relatorioHTML =
-    gerarRelatorioHTML();
+  const relatorioHTML = gerarRelatorioHTML();
 
-  const wrapper =
-    document.createElement("div");
+  /* =========================================================
+     📦 CONTAINER TEMPORÁRIO
+  ========================================================= */
 
-  wrapper.innerHTML = `
-    <div
-      id="pdf-content"
-      style="
-        background: #ffffff;
-        color: #111111;
-        padding: 40px;
-        width: 794px;
-        min-height: 1123px;
-        font-family: Arial, sans-serif;
-      "
-    >
-      ${relatorioHTML}
-    </div>
-  `;
+  const pdfContainer = document.createElement("div");
 
-  document.body.appendChild(
-    wrapper
+  pdfContainer.id = "pdf-content";
+
+  pdfContainer.style.position = "fixed";
+  pdfContainer.style.left = "-99999px";
+  pdfContainer.style.top = "0";
+
+  pdfContainer.style.width = "794px";
+  pdfContainer.style.minHeight = "1123px";
+
+  pdfContainer.style.background = "#ffffff";
+  pdfContainer.style.color = "#111111";
+
+  pdfContainer.style.padding = "40px";
+
+  pdfContainer.style.fontFamily =
+    "Arial, sans-serif";
+
+  pdfContainer.innerHTML = relatorioHTML;
+
+  document.body.appendChild(pdfContainer);
+
+  /* =========================================================
+     ⏳ AGUARDA RENDERIZAÇÃO
+  ========================================================= */
+
+  await new Promise((resolve) =>
+    requestAnimationFrame(resolve)
   );
 
-  const pdfElement =
-    wrapper.querySelector(
-      "#pdf-content"
-    );
+  /* =========================================================
+     ⚙️ OPTIONS
+  ========================================================= */
+
+  const options = {
+    margin: 10,
+
+    filename:
+      CONFIG.PDF.filename,
+
+    image: {
+      type: "jpeg",
+      quality: 1,
+    },
+
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff",
+    },
+
+    jsPDF: {
+      unit: "mm",
+      format: "a4",
+      orientation: "portrait",
+    },
+
+    pagebreak: {
+      mode: ["avoid-all", "css", "legacy"],
+    },
+  };
+
+  /* =========================================================
+     🚀 GERA PDF
+  ========================================================= */
 
   try {
-    await html2pdf(pdfElement, {
-      margin: 10,
-
-      filename:
-        CONFIG.PDF.filename,
-
-      image: {
-        type: "jpeg",
-        quality: 1,
-      },
-
-      html2canvas: {
-        scale: 2,
-        logging: false,
-      },
-
-      jsPDF: {
-        unit: "mm",
-        format: "a4",
-        orientation:
-          "portrait",
-      },
-    });
+    await html2pdf()
+      .set(options)
+      .from(pdfContainer)
+      .save();
   } catch (error) {
     console.error(
-      "ERRO AO GERAR PDF:",
+      "Erro ao gerar PDF:",
       error
     );
 
     alert(
-      "Erro ao gerar PDF."
+      "Erro ao gerar relatório PDF."
     );
   } finally {
-    wrapper.remove();
+    pdfContainer.remove();
   }
 }
 
