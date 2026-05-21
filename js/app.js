@@ -713,56 +713,69 @@ function gerarRelatorioHTML() {
 
 async function gerarPDF() {
   if (typeof html2pdf === "undefined") {
-    alert("Biblioteca html2pdf não encontrada.");
+    alert("html2pdf não encontrado.");
     return;
   }
 
   const relatorioHTML = gerarRelatorioHTML();
 
   /* =========================================================
-     📦 CONTAINER TEMPORÁRIO
+     📦 ELEMENTO TEMPORÁRIO
   ========================================================= */
 
-  const pdfContainer = document.createElement("div");
+  const pdfElement =
+    document.createElement("div");
 
-  pdfContainer.id = "pdf-content";
-
-  pdfContainer.style.position = "fixed";
-  pdfContainer.style.left = "-99999px";
-  pdfContainer.style.top = "0";
-
-  pdfContainer.style.width = "794px";
-  pdfContainer.style.minHeight = "1123px";
-
-  pdfContainer.style.background = "#ffffff";
-  pdfContainer.style.color = "#111111";
-
-  pdfContainer.style.padding = "40px";
-
-  pdfContainer.style.fontFamily =
-    "Arial, sans-serif";
-
-  pdfContainer.innerHTML = relatorioHTML;
-
-  document.body.appendChild(pdfContainer);
+  pdfElement.innerHTML =
+    relatorioHTML;
 
   /* =========================================================
-     ⏳ AGUARDA RENDERIZAÇÃO
+     🎨 ESTILO
   ========================================================= */
 
-  await new Promise((resolve) =>
-    requestAnimationFrame(resolve)
+  Object.assign(
+    pdfElement.style,
+    {
+      background: "#ffffff",
+      color: "#111111",
+
+      width: "800px",
+
+      padding: "40px",
+
+      fontFamily:
+        "Arial, sans-serif",
+
+      position: "absolute",
+
+      top: "0",
+      left: "0",
+
+      zIndex: "-1",
+    }
+  );
+
+  document.body.appendChild(
+    pdfElement
   );
 
   /* =========================================================
-     ⚙️ OPTIONS
+     ⏳ ESPERA RENDERIZAR
+  ========================================================= */
+
+  await new Promise((resolve) =>
+    setTimeout(resolve, 300)
+  );
+
+  /* =========================================================
+     ⚙️ CONFIG
   ========================================================= */
 
   const options = {
     margin: 10,
 
     filename:
-      CONFIG.PDF.filename,
+      "relatorio-atendimento.pdf",
 
     image: {
       type: "jpeg",
@@ -772,44 +785,41 @@ async function gerarPDF() {
     html2canvas: {
       scale: 2,
       useCORS: true,
-      logging: false,
-      backgroundColor: "#ffffff",
+      backgroundColor:
+        "#ffffff",
     },
 
     jsPDF: {
       unit: "mm",
       format: "a4",
-      orientation: "portrait",
-    },
-
-    pagebreak: {
-      mode: ["avoid-all", "css", "legacy"],
+      orientation:
+        "portrait",
     },
   };
 
   /* =========================================================
-     🚀 GERA PDF
+     🚀 GERAÇÃO
   ========================================================= */
 
   try {
     await html2pdf()
       .set(options)
-      .from(pdfContainer)
+      .from(pdfElement)
       .save();
-  } catch (error) {
-    console.error(
-      "Erro ao gerar PDF:",
-      error
+
+    console.log(
+      "✅ PDF gerado com sucesso."
     );
+  } catch (error) {
+    console.error(error);
 
     alert(
-      "Erro ao gerar relatório PDF."
+      "Erro ao gerar PDF."
     );
   } finally {
-    pdfContainer.remove();
+    pdfElement.remove();
   }
 }
-
 /* =========================================================
    🚀 EVENTS
 ========================================================= */
