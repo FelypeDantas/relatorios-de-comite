@@ -1,31 +1,37 @@
 /* =========================================================
-   🩸 SANGUE CARMESIM • ATENDIMENTO
+   🩸 SANGUE CARMESIM • COMITÊ DE ATENDIMENTO
+========================================================= */
+
+/* =========================================================
+   📦 DOM
 ========================================================= */
 
 const DOM = {
-  semanas:
-    document.querySelectorAll(
+  semanas: [
+    ...document.querySelectorAll(
       "[data-semana]"
     ),
+  ],
 
-  faltas:
+  addADMButtons: [
+    ...document.querySelectorAll(
+      "[data-add-adm]"
+    ),
+  ],
+
+  faltasContainer:
     document.querySelector(
       "#faltas-container"
     ),
 
-  gerarPDF:
-    document.querySelector(
-      "#gerar-pdf"
-    ),
-
-  addADMButtons:
-    document.querySelectorAll(
-      "[data-add-adm]"
-    ),
-
-  addFalta:
+  addFaltaButton:
     document.querySelector(
       "#add-falta"
+    ),
+
+  gerarPDFButton:
+    document.querySelector(
+      "#gerar-pdf"
     ),
 };
 
@@ -40,24 +46,24 @@ const CONFIG = {
     filename:
       "relatorio-atendimento.pdf",
 
-    margin: 0.3,
+    margin: 0.5,
 
     scale: 2,
   },
 };
 
 /* =========================================================
-   🎨 CLASSES
+   🎨 STYLES
 ========================================================= */
 
-const CLASSES = {
+const STYLES = {
   input:
     "w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3 text-white transition-all focus:outline-none focus:border-red-500/50 focus:ring-4 focus:ring-red-900/20",
 
   card:
-    "bg-zinc-950/70 border border-zinc-800 rounded-3xl p-6 animate-fade",
+    "adm-card bg-zinc-950/70 border border-zinc-800 rounded-3xl p-6 animate-fade",
 
-  remove:
+  removeButton:
     "mt-6 w-full bg-red-950/40 hover:bg-red-900/50 border border-red-800/40 text-red-300 py-3 rounded-2xl transition-all",
 };
 
@@ -65,10 +71,10 @@ const CLASSES = {
    🧠 HELPERS
 ========================================================= */
 
-const createElement = (
+function createElement(
   tag,
   className = ""
-) => {
+) {
   const element =
     document.createElement(tag);
 
@@ -78,16 +84,16 @@ const createElement = (
   }
 
   return element;
-};
+}
 
-const createInput = ({
+function createInput({
   type = "text",
   placeholder = "",
-} = {}) => {
+} = {}) {
   const input =
     createElement(
       "input",
-      CLASSES.input
+      STYLES.input
     );
 
   input.type = type;
@@ -96,15 +102,15 @@ const createInput = ({
     placeholder;
 
   return input;
-};
+}
 
-const createSelect = (
+function createSelect(
   options = []
-) => {
+) {
   const select =
     createElement(
       "select",
-      CLASSES.input
+      STYLES.input
     );
 
   options.forEach((text) => {
@@ -122,11 +128,9 @@ const createSelect = (
   });
 
   return select;
-};
+}
 
-const createLabel = (
-  text
-) => {
+function createLabel(text) {
   const label =
     createElement(
       "label",
@@ -137,12 +141,12 @@ const createLabel = (
     text;
 
   return label;
-};
+}
 
-const createField = ({
+function createField({
   label,
   input,
-}) => {
+}) {
   const wrapper =
     createElement("div");
 
@@ -152,15 +156,24 @@ const createField = ({
   );
 
   return wrapper;
-};
+}
 
-const createRemoveButton = (
-  callback
-) => {
+function createGrid(
+  columns = 3
+) {
+  return createElement(
+    "div",
+    `grid grid-cols-1 lg:grid-cols-${columns} gap-6`
+  );
+}
+
+function createRemoveButton(
+  onClick
+) {
   const button =
     createElement(
       "button",
-      CLASSES.remove
+      STYLES.removeButton
     );
 
   button.type = "button";
@@ -170,30 +183,21 @@ const createRemoveButton = (
 
   button.addEventListener(
     "click",
-    callback
+    onClick
   );
 
   return button;
-};
-
-const createGrid = (
-  columns = 3
-) => {
-  return createElement(
-    "div",
-    `grid grid-cols-1 lg:grid-cols-${columns} gap-6`
-  );
-};
+}
 
 /* =========================================================
-   👥 ADM CARD
+   👥 CARD ADM
 ========================================================= */
 
 function createADMCard() {
   const card =
     createElement(
       "div",
-      CLASSES.card
+      STYLES.card
     );
 
   const grid =
@@ -202,6 +206,7 @@ function createADMCard() {
   const fields = [
     {
       label: "ADM",
+
       input: createInput({
         placeholder:
           "Nome do ADM",
@@ -211,6 +216,7 @@ function createADMCard() {
     {
       label:
         "Contribuição",
+
       input: createInput({
         placeholder:
           "Ex: 15 atendimentos",
@@ -220,6 +226,7 @@ function createADMCard() {
     {
       label:
         "Prazo cumprido?",
+
       input: createSelect([
         "Selecione",
         "Sim",
@@ -248,14 +255,14 @@ function createADMCard() {
 }
 
 /* =========================================================
-   ⚠️ FALTA CARD
+   ⚠️ CARD FALTA
 ========================================================= */
 
 function createFaltaCard() {
   const card =
     createElement(
       "div",
-      CLASSES.card
+      STYLES.card
     );
 
   const grid =
@@ -264,6 +271,7 @@ function createFaltaCard() {
   const fields = [
     {
       label: "ADM",
+
       input: createInput({
         placeholder:
           "Nome do ADM",
@@ -273,6 +281,7 @@ function createFaltaCard() {
     {
       label:
         "O que aconteceu?",
+
       input: createInput({
         placeholder:
           "Descrição da ocorrência",
@@ -281,6 +290,7 @@ function createFaltaCard() {
 
     {
       label: "Quantidade",
+
       input: createInput({
         type: "number",
         placeholder: "0",
@@ -290,6 +300,7 @@ function createFaltaCard() {
     {
       label:
         "Advertência?",
+
       input: createSelect([
         "Selecione",
         "Sim",
@@ -321,72 +332,85 @@ function createFaltaCard() {
    📊 DATA
 ========================================================= */
 
-function coletarSemanas() {
+function getCardInputs(card) {
   return [
-    ...DOM.semanas,
-  ].map((semana) => {
-    const cards =
-      semana.querySelectorAll(
-        `.${CLASSES.card
-          .split(" ")
-          .join(".")}`
+    ...card.querySelectorAll(
+      "input, select"
+    ),
+  ];
+}
+
+function coletarSemanas() {
+  return DOM.semanas.map(
+    (semana) => {
+      const cards = [
+        ...semana.querySelectorAll(
+          ".adm-card"
+        ),
+      ];
+
+      return cards.map(
+        (card) => {
+          const inputs =
+            getCardInputs(
+              card
+            );
+
+          return {
+            adm:
+              inputs[0]
+                ?.value || "",
+
+            contribuicao:
+              inputs[1]
+                ?.value || "",
+
+            prazo:
+              inputs[2]
+                ?.value || "",
+          };
+        }
       );
-
-    return [...cards].map(
-      (card) => {
-        const inputs =
-          card.querySelectorAll(
-            "input, select"
-          );
-
-        return {
-          adm:
-            inputs[0]
-              ?.value || "",
-
-          contribuicao:
-            inputs[1]
-              ?.value || "",
-
-          prazo:
-            inputs[2]
-              ?.value || "",
-        };
-      }
-    );
-  });
+    }
+  );
 }
 
 function coletarFaltas() {
-  if (!DOM.faltas)
+  if (
+    !DOM.faltasContainer
+  ) {
     return [];
+  }
 
-  const cards =
-    DOM.faltas.querySelectorAll(
-      `.${CLASSES.card
-        .split(" ")
-        .join(".")}`
-    );
+  const cards = [
+    ...DOM.faltasContainer.querySelectorAll(
+      ".adm-card"
+    ),
+  ];
 
-  return [...cards].map(
+  return cards.map(
     (card) => {
       const inputs =
-        card.querySelectorAll(
-          "input, select"
+        getCardInputs(
+          card
         );
 
       return {
         adm:
-          inputs[0]?.value || "",
+          inputs[0]
+            ?.value || "",
 
         ocorrido:
-          inputs[1]?.value || "",
+          inputs[1]
+            ?.value || "",
 
         quantidade:
-          inputs[2]?.value || "",
+          inputs[2]
+            ?.value || "",
 
         advertencia:
-          inputs[3]?.value || "",
+          inputs[3]
+            ?.value || "",
       };
     }
   );
@@ -401,9 +425,9 @@ function gerarMetricas() {
 
   let totalADMS = 0;
 
-  let cumpridos = 0;
+  let totalCumpridos = 0;
 
-  let naoCumpridos = 0;
+  let totalNaoCumpridos = 0;
 
   semanas.forEach(
     (semana) => {
@@ -415,14 +439,14 @@ function gerarMetricas() {
             registro.prazo ===
             "Sim"
           ) {
-            cumpridos++;
+            totalCumpridos++;
           }
 
           if (
             registro.prazo ===
             "Não"
           ) {
-            naoCumpridos++;
+            totalNaoCumpridos++;
           }
         }
       );
@@ -432,23 +456,23 @@ function gerarMetricas() {
   return {
     totalADMS,
 
-    cumpridos,
+    totalCumpridos,
 
-    naoCumpridos,
+    totalNaoCumpridos,
 
     totalFaltas:
       faltas.length,
 
     desempenho:
-      cumpridos >=
-      naoCumpridos
-        ? "bom desempenho operacional"
-        : "necessidade de melhorias operacionais",
+      totalCumpridos >=
+      totalNaoCumpridos
+        ? "Bom desempenho operacional."
+        : "Necessidade de melhorias operacionais.",
   };
 }
 
 /* =========================================================
-   📄 PDF TEMPLATE
+   📄 TEMPLATE PDF
 ========================================================= */
 
 function gerarRelatorioHTML() {
@@ -459,14 +483,14 @@ function gerarRelatorioHTML() {
     <div
       style="
         padding: 48px;
-        font-family: Arial;
+        font-family: Arial, sans-serif;
         color: #111;
       "
     >
 
       <h1
         style="
-          font-size: 34px;
+          font-size: 32px;
           margin-bottom: 8px;
         "
       >
@@ -504,12 +528,12 @@ function gerarRelatorioHTML() {
 
         <li>
           Prazos cumpridos:
-          ${metricas.cumpridos}
+          ${metricas.totalCumpridos}
         </li>
 
         <li>
           Prazos não cumpridos:
-          ${metricas.naoCumpridos}
+          ${metricas.totalNaoCumpridos}
         </li>
 
         <li>
@@ -527,10 +551,7 @@ function gerarRelatorioHTML() {
       </h2>
 
       <p>
-        O comitê apresentou
-        <strong>
-          ${metricas.desempenho}
-        </strong>.
+        ${metricas.desempenho}
       </p>
 
     </div>
@@ -562,14 +583,22 @@ async function gerarPDF() {
   Object.assign(
     container.style,
     {
+      position:
+        "fixed",
+
+      left: "-9999px",
+
+      top: "0",
+
+      width: "210mm",
+
+      minHeight:
+        "297mm",
+
       background:
         "#ffffff",
 
       color: "#111111",
-
-      width: "210mm",
-
-      minHeight: "297mm",
     }
   );
 
@@ -612,6 +641,15 @@ async function gerarPDF() {
       })
       .from(container)
       .save();
+  } catch (error) {
+    console.error(
+      "ERRO PDF:",
+      error
+    );
+
+    alert(
+      "Erro ao gerar relatório."
+    );
   } finally {
     container.remove();
   }
@@ -621,83 +659,79 @@ async function gerarPDF() {
    🚀 EVENTS
 ========================================================= */
 
+function adicionarADM(
+  semanaId
+) {
+  const container =
+    document.querySelector(
+      `[data-semana="${semanaId}"]`
+    );
+
+  if (!container)
+    return;
+
+  if (
+    container.children
+      .length >=
+    CONFIG.MAX_ADMS
+  ) {
+    alert(
+      "Limite máximo de ADMs atingido."
+    );
+
+    return;
+  }
+
+  container.appendChild(
+    createADMCard()
+  );
+}
+
 DOM.addADMButtons.forEach(
   (button) => {
     button.addEventListener(
       "click",
       () => {
-        const semanaId =
+        adicionarADM(
           button.dataset
-            .addAdm;
-
-        const container =
-          document.querySelector(
-            `[data-semana="${semanaId}"]`
-          );
-
-        if (!container)
-          return;
-
-        const totalCards =
-          container.children
-            .length;
-
-        if (
-          totalCards >=
-          CONFIG.MAX_ADMS
-        ) {
-          alert(
-            "Limite máximo de ADMs atingido."
-          );
-
-          return;
-        }
-
-        container.appendChild(
-          createADMCard()
+            .addAdm
         );
       }
     );
   }
 );
 
-DOM.addFalta?.addEventListener(
+DOM.addFaltaButton?.addEventListener(
   "click",
   () => {
-    DOM.faltas?.appendChild(
+    DOM.faltasContainer?.appendChild(
       createFaltaCard()
     );
   }
 );
 
-DOM.gerarPDF?.addEventListener(
+DOM.gerarPDFButton?.addEventListener(
   "click",
   async (event) => {
     event.preventDefault();
 
     const originalText =
-      DOM.gerarPDF
+      DOM.gerarPDFButton
         .innerHTML;
 
     try {
-      DOM.gerarPDF.disabled =
+      DOM.gerarPDFButton.disabled =
         true;
 
-      DOM.gerarPDF.innerHTML =
+      DOM.gerarPDFButton.innerHTML =
         "Gerando relatório...";
 
       await gerarPDF();
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        "Erro ao gerar relatório."
-      );
     } finally {
-      DOM.gerarPDF.disabled =
+      DOM.gerarPDFButton.disabled =
         false;
 
-      DOM.gerarPDF.innerHTML =
+      DOM.gerarPDFButton.innerHTML =
         originalText;
     }
   }
@@ -715,7 +749,7 @@ DOM.semanas.forEach(
   }
 );
 
-DOM.faltas?.appendChild(
+DOM.faltasContainer?.appendChild(
   createFaltaCard()
 );
 
