@@ -1,39 +1,12 @@
 /* =========================================================
-   🩸 SANGUE CARMESIM • COMITÊ DE ATENDIMENTO
+   🩸 SANGUE CARMESIM • ATENDIMENTO
 ========================================================= */
 
-/* =========================================================
-   📦 DOM
-========================================================= */
+const $ = (selector) =>
+  document.querySelector(selector);
 
-const DOM = {
-  semanas: [
-    ...document.querySelectorAll(
-      "[data-semana]"
-    ),
-  ],
-
-  addADMButtons: [
-    ...document.querySelectorAll(
-      "[data-add-adm]"
-    ),
-  ],
-
-  faltasContainer:
-    document.querySelector(
-      "#faltas-container"
-    ),
-
-  addFaltaButton:
-    document.querySelector(
-      "#add-falta"
-    ),
-
-  gerarPDFButton:
-    document.querySelector(
-      "#gerar-pdf"
-    ),
-};
+const $$ = (selector) =>
+  [...document.querySelectorAll(selector)];
 
 /* =========================================================
    ⚙️ CONFIG
@@ -45,26 +18,51 @@ const CONFIG = {
   PDF: {
     filename:
       "relatorio-atendimento.pdf",
-
-    margin: 0.5,
-
-    scale: 2,
   },
 };
 
 /* =========================================================
-   🎨 STYLES
+   📦 DOM
 ========================================================= */
 
-const STYLES = {
+const DOM = {
+  semanas: $$("[data-semana]"),
+
+  addADMButtons:
+    $$("[data-add-adm]"),
+
+  faltasContainer:
+    $("#faltas-container"),
+
+  addFaltaButton:
+    $("#add-falta"),
+
+  gerarPDFButton:
+    $("#gerar-pdf"),
+
+  mes: $("#mes"),
+
+  ano: $("#ano"),
+
+  meta: $("#meta"),
+
+  observacoes:
+    $("#observacoes"),
+};
+
+/* =========================================================
+   🎨 CLASSES
+========================================================= */
+
+const CLASSES = {
   input:
-    "w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3 text-white transition-all focus:outline-none focus:border-red-500/50 focus:ring-4 focus:ring-red-900/20",
+    "w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3 text-white",
 
   card:
-    "adm-card bg-zinc-950/70 border border-zinc-800 rounded-3xl p-6 animate-fade",
+    "adm-card bg-zinc-950/70 border border-zinc-800 rounded-3xl p-6 space-y-6",
 
-  removeButton:
-    "mt-6 w-full bg-red-950/40 hover:bg-red-900/50 border border-red-800/40 text-red-300 py-3 rounded-2xl transition-all",
+  buttonRemove:
+    "w-full py-3 rounded-2xl bg-red-950/40 hover:bg-red-900/50 border border-red-800/40 text-red-300 transition-all",
 };
 
 /* =========================================================
@@ -78,10 +76,8 @@ function createElement(
   const element =
     document.createElement(tag);
 
-  if (className) {
-    element.className =
-      className;
-  }
+  element.className =
+    className;
 
   return element;
 }
@@ -93,7 +89,7 @@ function createInput({
   const input =
     createElement(
       "input",
-      STYLES.input
+      CLASSES.input
     );
 
   input.type = type;
@@ -110,27 +106,27 @@ function createSelect(
   const select =
     createElement(
       "select",
-      STYLES.input
+      CLASSES.input
     );
 
-  options.forEach((text) => {
-    const option =
-      document.createElement(
-        "option"
-      );
-
-    option.value = text;
-
-    option.textContent =
-      text;
-
-    select.appendChild(option);
-  });
+  select.innerHTML =
+    options
+      .map(
+        (option) =>
+          `<option>${option}</option>`
+      )
+      .join("");
 
   return select;
 }
 
-function createLabel(text) {
+function createField(
+  labelText,
+  input
+) {
+  const wrapper =
+    createElement("div");
+
   const label =
     createElement(
       "label",
@@ -138,42 +134,23 @@ function createLabel(text) {
     );
 
   label.textContent =
-    text;
-
-  return label;
-}
-
-function createField({
-  label,
-  input,
-}) {
-  const wrapper =
-    createElement("div");
+    labelText;
 
   wrapper.append(
-    createLabel(label),
+    label,
     input
   );
 
   return wrapper;
 }
 
-function createGrid(
-  columns = 3
-) {
-  return createElement(
-    "div",
-    `grid grid-cols-1 lg:grid-cols-${columns} gap-6`
-  );
-}
-
 function createRemoveButton(
-  onClick
+  callback
 ) {
   const button =
     createElement(
       "button",
-      STYLES.removeButton
+      CLASSES.buttonRemove
     );
 
   button.type = "button";
@@ -181,10 +158,8 @@ function createRemoveButton(
   button.textContent =
     "Remover";
 
-  button.addEventListener(
-    "click",
-    onClick
-  );
+  button.onclick =
+    callback;
 
   return button;
 }
@@ -197,55 +172,46 @@ function createADMCard() {
   const card =
     createElement(
       "div",
-      STYLES.card
+      CLASSES.card
     );
 
   const grid =
-    createGrid(3);
+    createElement(
+      "div",
+      "grid grid-cols-1 lg:grid-cols-3 gap-6"
+    );
 
   const fields = [
-    {
-      label: "ADM",
-
-      input: createInput({
+    createField(
+      "ADM",
+      createInput({
         placeholder:
           "Nome do ADM",
-      }),
-    },
+      })
+    ),
 
-    {
-      label:
-        "Contribuição",
-
-      input: createInput({
+    createField(
+      "Contribuição",
+      createInput({
         placeholder:
           "Ex: 15 atendimentos",
-      }),
-    },
+      })
+    ),
 
-    {
-      label:
-        "Prazo cumprido?",
-
-      input: createSelect([
+    createField(
+      "Prazo cumprido?",
+      createSelect([
         "Selecione",
         "Sim",
         "Não",
-      ]),
-    },
+      ])
+    ),
   ];
 
-  fields.forEach(
-    (field) => {
-      grid.appendChild(
-        createField(field)
-      );
-    }
-  );
+  grid.append(...fields);
 
-  card.appendChild(grid);
-
-  card.appendChild(
+  card.append(
+    grid,
     createRemoveButton(() =>
       card.remove()
     )
@@ -262,64 +228,54 @@ function createFaltaCard() {
   const card =
     createElement(
       "div",
-      STYLES.card
+      CLASSES.card
     );
 
   const grid =
-    createGrid(4);
+    createElement(
+      "div",
+      "grid grid-cols-1 lg:grid-cols-4 gap-6"
+    );
 
   const fields = [
-    {
-      label: "ADM",
-
-      input: createInput({
+    createField(
+      "ADM",
+      createInput({
         placeholder:
           "Nome do ADM",
-      }),
-    },
+      })
+    ),
 
-    {
-      label:
-        "O que aconteceu?",
-
-      input: createInput({
+    createField(
+      "Ocorrido",
+      createInput({
         placeholder:
-          "Descrição da ocorrência",
-      }),
-    },
+          "Descrição",
+      })
+    ),
 
-    {
-      label: "Quantidade",
-
-      input: createInput({
+    createField(
+      "Quantidade",
+      createInput({
         type: "number",
         placeholder: "0",
-      }),
-    },
+      })
+    ),
 
-    {
-      label:
-        "Advertência?",
-
-      input: createSelect([
+    createField(
+      "Advertência?",
+      createSelect([
         "Selecione",
         "Sim",
         "Não",
-      ]),
-    },
+      ])
+    ),
   ];
 
-  fields.forEach(
-    (field) => {
-      grid.appendChild(
-        createField(field)
-      );
-    }
-  );
+  grid.append(...fields);
 
-  card.appendChild(grid);
-
-  card.appendChild(
+  card.append(
+    grid,
     createRemoveButton(() =>
       card.remove()
     )
@@ -329,172 +285,82 @@ function createFaltaCard() {
 }
 
 /* =========================================================
-   📊 DATA
+   📊 COLETA DE DADOS
 ========================================================= */
-
-function getCardInputs(card) {
-  return [
-    ...card.querySelectorAll(
-      "input, select"
-    ),
-  ];
-}
 
 function coletarSemanas() {
   return DOM.semanas.map(
     (semana) => {
-      const cards = [
+      return [
         ...semana.querySelectorAll(
           ".adm-card"
         ),
-      ];
+      ].map((card) => {
+        const [
+          adm,
+          contribuicao,
+          prazo,
+        ] =
+          card.querySelectorAll(
+            "input, select"
+          );
 
-      return cards.map(
-        (card) => {
-          const inputs =
-            getCardInputs(
-              card
-            );
+        return {
+          adm:
+            adm.value || "-",
 
-          return {
-            adm:
-              inputs[0]
-                ?.value || "",
+          contribuicao:
+            contribuicao.value ||
+            "-",
 
-            contribuicao:
-              inputs[1]
-                ?.value || "",
-
-            prazo:
-              inputs[2]
-                ?.value || "",
-          };
-        }
-      );
+          prazo:
+            prazo.value || "-",
+        };
+      });
     }
   );
 }
 
 function coletarFaltas() {
-  if (
-    !DOM.faltasContainer
-  ) {
-    return [];
-  }
-
-  const cards = [
+  return [
     ...DOM.faltasContainer.querySelectorAll(
       ".adm-card"
     ),
-  ];
-
-  return cards.map(
-    (card) => {
-      const inputs =
-        getCardInputs(
-          card
-        );
-
-      return {
-        adm:
-          inputs[0]
-            ?.value || "",
-
-        ocorrido:
-          inputs[1]
-            ?.value || "",
-
-        quantidade:
-          inputs[2]
-            ?.value || "",
-
-        advertencia:
-          inputs[3]
-            ?.value || "",
-      };
-    }
-  );
-}
-
-function gerarMetricas() {
-  const semanas =
-    coletarSemanas();
-
-  const faltas =
-    coletarFaltas();
-
-  let totalADMS = 0;
-
-  let totalCumpridos = 0;
-
-  let totalNaoCumpridos = 0;
-
-  semanas.forEach(
-    (semana) => {
-      semana.forEach(
-        (registro) => {
-          totalADMS++;
-
-          if (
-            registro.prazo ===
-            "Sim"
-          ) {
-            totalCumpridos++;
-          }
-
-          if (
-            registro.prazo ===
-            "Não"
-          ) {
-            totalNaoCumpridos++;
-          }
-        }
+  ].map((card) => {
+    const [
+      adm,
+      ocorrido,
+      quantidade,
+      advertencia,
+    ] =
+      card.querySelectorAll(
+        "input, select"
       );
-    }
-  );
 
-  return {
-    totalADMS,
+    return {
+      adm:
+        adm.value || "-",
 
-    totalCumpridos,
+      ocorrido:
+        ocorrido.value ||
+        "-",
 
-    totalNaoCumpridos,
+      quantidade:
+        quantidade.value ||
+        "-",
 
-    totalFaltas:
-      faltas.length,
-
-    desempenho:
-      totalCumpridos >=
-      totalNaoCumpridos
-        ? "Bom desempenho operacional."
-        : "Necessidade de melhorias operacionais.",
-  };
+      advertencia:
+        advertencia.value ||
+        "-",
+    };
+  });
 }
 
 /* =========================================================
-   📄 TEMPLATE PDF
+   📄 HTML PDF
 ========================================================= */
 
 function gerarRelatorioHTML() {
-  const metricas = gerarMetricas();
-
-  const mes =
-    document.querySelector("#mes")
-      ?.value || "-";
-
-  const ano =
-    document.querySelector("#ano")
-      ?.value || "-";
-
-  const meta =
-    document.querySelector("#meta")
-      ?.value || "-";
-
-  const observacoes =
-    document.querySelector(
-      "#observacoes"
-    )?.value || "Nenhuma.";
-
   const semanas =
     coletarSemanas();
 
@@ -502,200 +368,143 @@ function gerarRelatorioHTML() {
     coletarFaltas();
 
   return `
-    <div
-      style="
-        font-family: Arial, sans-serif;
-        color: #111;
-        line-height: 1.6;
-      "
-    >
+    <div style="font-family: Arial; color: #111;">
 
-      <h1
-        style="
-          font-size: 30px;
-          margin-bottom: 10px;
-        "
-      >
+      <h1>
         🩸 Relatório Mensal
       </h1>
 
-      <p
-        style="
-          color: #555;
-          margin-bottom: 30px;
-        "
-      >
-        Comitê de Atendimento • Sangue Carmesim
+      <p>
+        Comitê de Atendimento
       </p>
 
       <hr />
 
-      <h2 style="margin-top: 30px;">
+      <h2>
         Informações Gerais
       </h2>
 
-      <ul>
-        <li>
-          <strong>Mês:</strong>
-          ${mes}
-        </li>
+      <p>
+        <strong>Mês:</strong>
+        ${DOM.mes.value || "-"}
+      </p>
 
-        <li>
-          <strong>Ano:</strong>
-          ${ano}
-        </li>
+      <p>
+        <strong>Ano:</strong>
+        ${DOM.ano.value || "-"}
+      </p>
 
-        <li>
-          <strong>Meta:</strong>
-          ${meta}
-        </li>
-      </ul>
-
-      <h2 style="margin-top: 30px;">
-        Métricas
-      </h2>
-
-      <ul>
-        <li>
-          <strong>Total de registros:</strong>
-          ${metricas.totalADMS}
-        </li>
-
-        <li>
-          <strong>Prazos cumpridos:</strong>
-          ${metricas.totalCumpridos}
-        </li>
-
-        <li>
-          <strong>Prazos não cumpridos:</strong>
-          ${metricas.totalNaoCumpridos}
-        </li>
-
-        <li>
-          <strong>Total de faltas:</strong>
-          ${metricas.totalFaltas}
-        </li>
-      </ul>
+      <p>
+        <strong>Meta:</strong>
+        ${DOM.meta.value || "-"}
+      </p>
 
       ${semanas
         .map(
-          (semana, index) => `
-            <div
-              style="
-                margin-top: 40px;
-              "
-            >
+          (
+            semana,
+            index
+          ) => `
+            <div style="margin-top:30px;">
 
               <h2>
-                📇 ${index + 1}ª Semana
+                ${index + 1}ª Semana
               </h2>
 
-              ${
-                semana.length === 0
-                  ? `
-                    <p>
-                      Nenhum registro.
-                    </p>
+              ${semana
+                .map(
+                  (
+                    registro
+                  ) => `
+                    <div
+                      style="
+                        border:1px solid #ccc;
+                        padding:12px;
+                        margin-top:10px;
+                        border-radius:10px;
+                      "
+                    >
+                      <p>
+                        <strong>ADM:</strong>
+                        ${registro.adm}
+                      </p>
+
+                      <p>
+                        <strong>Contribuição:</strong>
+                        ${registro.contribuicao}
+                      </p>
+
+                      <p>
+                        <strong>Prazo:</strong>
+                        ${registro.prazo}
+                      </p>
+                    </div>
                   `
-                  : semana
-                      .map(
-                        (adm) => `
-                          <div
-                            style="
-                              border: 1px solid #ccc;
-                              border-radius: 10px;
-                              padding: 15px;
-                              margin-top: 15px;
-                            "
-                          >
-
-                            <p>
-                              <strong>ADM:</strong>
-                              ${adm.adm || "-"}
-                            </p>
-
-                            <p>
-                              <strong>Contribuição:</strong>
-                              ${adm.contribuicao || "-"}
-                            </p>
-
-                            <p>
-                              <strong>Prazo:</strong>
-                              ${adm.prazo || "-"}
-                            </p>
-
-                          </div>
-                        `
-                      )
-                      .join("")
-              }
+                )
+                .join("")}
 
             </div>
           `
         )
         .join("")}
 
-      <div style="margin-top: 40px;">
+      <div style="margin-top:30px;">
 
         <h2>
           ⚠️ Faltas
         </h2>
 
-        ${
-          faltas.length === 0
-            ? `
-              <p>
-                Nenhuma falta registrada.
-              </p>
+        ${faltas
+          .map(
+            (
+              falta
+            ) => `
+              <div
+                style="
+                  border:1px solid #ccc;
+                  padding:12px;
+                  margin-top:10px;
+                  border-radius:10px;
+                "
+              >
+                <p>
+                  <strong>ADM:</strong>
+                  ${falta.adm}
+                </p>
+
+                <p>
+                  <strong>Ocorrido:</strong>
+                  ${falta.ocorrido}
+                </p>
+
+                <p>
+                  <strong>Quantidade:</strong>
+                  ${falta.quantidade}
+                </p>
+
+                <p>
+                  <strong>Advertência:</strong>
+                  ${falta.advertencia}
+                </p>
+              </div>
             `
-            : faltas
-                .map(
-                  (falta) => `
-                    <div
-                      style="
-                        border: 1px solid #ccc;
-                        border-radius: 10px;
-                        padding: 15px;
-                        margin-top: 15px;
-                      "
-                    >
-
-                      <p>
-                        <strong>ADM:</strong>
-                        ${falta.adm || "-"}
-                      </p>
-
-                      <p>
-                        <strong>Ocorrido:</strong>
-                        ${falta.ocorrido || "-"}
-                      </p>
-
-                      <p>
-                        <strong>Quantidade:</strong>
-                        ${falta.quantidade || "-"}
-                      </p>
-
-                      <p>
-                        <strong>Advertência:</strong>
-                        ${falta.advertencia || "-"}
-                      </p>
-
-                    </div>
-                  `
-                )
-                .join("")
-        }
+          )
+          .join("")}
 
       </div>
 
-      <div style="margin-top: 40px;">
+      <div style="margin-top:30px;">
 
         <h2>
-          📝 Observações Finais
+          📝 Observações
         </h2>
 
         <p>
-          ${observacoes}
+          ${
+            DOM.observacoes
+              .value ||
+            "Nenhuma observação."
+          }
         </p>
 
       </div>
@@ -703,113 +512,64 @@ function gerarRelatorioHTML() {
     </div>
   `;
 }
-/* =========================================================
-   📄 PDF
-========================================================= */
 
 /* =========================================================
    📄 PDF
 ========================================================= */
 
 async function gerarPDF() {
-  if (typeof html2pdf === "undefined") {
-    alert("html2pdf não encontrado.");
+  if (
+    typeof window.html2pdf ===
+    "undefined"
+  ) {
+    alert(
+      "html2pdf não encontrado."
+    );
+
     return;
   }
 
-  const relatorioHTML = gerarRelatorioHTML();
-
-  /* =========================================================
-     📦 ELEMENTO TEMPORÁRIO
-  ========================================================= */
-
-  const pdfElement =
+  const container =
     document.createElement("div");
 
-  pdfElement.innerHTML =
-    relatorioHTML;
+  container.style.background =
+    "#fff";
 
-  /* =========================================================
-     🎨 ESTILO
-  ========================================================= */
+  container.style.padding =
+    "40px";
 
-  Object.assign(
-    pdfElement.style,
-    {
-      background: "#ffffff",
-      color: "#111111",
+  container.style.width =
+    "794px";
 
-      width: "800px",
-
-      padding: "40px",
-
-      fontFamily:
-        "Arial, sans-serif",
-
-      position: "absolute",
-
-      top: "0",
-      left: "0",
-
-      zIndex: "-1",
-    }
-  );
+  container.innerHTML =
+    gerarRelatorioHTML();
 
   document.body.appendChild(
-    pdfElement
+    container
   );
-
-  /* =========================================================
-     ⏳ ESPERA RENDERIZAR
-  ========================================================= */
-
-  await new Promise((resolve) =>
-    setTimeout(resolve, 300)
-  );
-
-  /* =========================================================
-     ⚙️ CONFIG
-  ========================================================= */
-
-  const options = {
-    margin: 10,
-
-    filename:
-      "relatorio-atendimento.pdf",
-
-    image: {
-      type: "jpeg",
-      quality: 1,
-    },
-
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      backgroundColor:
-        "#ffffff",
-    },
-
-    jsPDF: {
-      unit: "mm",
-      format: "a4",
-      orientation:
-        "portrait",
-    },
-  };
-
-  /* =========================================================
-     🚀 GERAÇÃO
-  ========================================================= */
 
   try {
     await html2pdf()
-      .set(options)
-      .from(pdfElement)
-      .save();
+      .from(container)
+      .set({
+        margin: 10,
 
-    console.log(
-      "✅ PDF gerado com sucesso."
-    );
+        filename:
+          CONFIG.PDF
+            .filename,
+
+        html2canvas: {
+          scale: 2,
+        },
+
+        jsPDF: {
+          unit: "mm",
+          format: "a4",
+          orientation:
+            "portrait",
+        },
+      })
+      .save();
   } catch (error) {
     console.error(error);
 
@@ -817,9 +577,10 @@ async function gerarPDF() {
       "Erro ao gerar PDF."
     );
   } finally {
-    pdfElement.remove();
+    container.remove();
   }
 }
+
 /* =========================================================
    🚀 EVENTS
 ========================================================= */
@@ -827,13 +588,9 @@ async function gerarPDF() {
 function adicionarADM(
   semanaId
 ) {
-  const container =
-    document.querySelector(
-      `[data-semana="${semanaId}"]`
-    );
-
-  if (!container)
-    return;
+  const container = $(
+    `[data-semana="${semanaId}"]`
+  );
 
   if (
     container.children
@@ -841,7 +598,7 @@ function adicionarADM(
     CONFIG.MAX_ADMS
   ) {
     alert(
-      "Limite máximo de ADMs atingido."
+      "Limite máximo atingido."
     );
 
     return;
@@ -856,12 +613,11 @@ DOM.addADMButtons.forEach(
   (button) => {
     button.addEventListener(
       "click",
-      () => {
+      () =>
         adicionarADM(
           button.dataset
             .addAdm
-        );
-      }
+        )
     );
   }
 );
@@ -869,7 +625,7 @@ DOM.addADMButtons.forEach(
 DOM.addFaltaButton?.addEventListener(
   "click",
   () => {
-    DOM.faltasContainer?.appendChild(
+    DOM.faltasContainer.appendChild(
       createFaltaCard()
     );
   }
@@ -877,28 +633,24 @@ DOM.addFaltaButton?.addEventListener(
 
 DOM.gerarPDFButton?.addEventListener(
   "click",
-  async (event) => {
-    event.preventDefault();
-
+  async () => {
     const originalText =
       DOM.gerarPDFButton
         .innerHTML;
 
-    try {
-      DOM.gerarPDFButton.disabled =
-        true;
+    DOM.gerarPDFButton.disabled =
+      true;
 
-      DOM.gerarPDFButton.innerHTML =
-        "Gerando relatório...";
+    DOM.gerarPDFButton.innerHTML =
+      "Gerando PDF...";
 
-      await gerarPDF();
-    } finally {
-      DOM.gerarPDFButton.disabled =
-        false;
+    await gerarPDF();
 
-      DOM.gerarPDFButton.innerHTML =
-        originalText;
-    }
+    DOM.gerarPDFButton.disabled =
+      false;
+
+    DOM.gerarPDFButton.innerHTML =
+      originalText;
   }
 );
 
@@ -907,11 +659,10 @@ DOM.gerarPDFButton?.addEventListener(
 ========================================================= */
 
 DOM.semanas.forEach(
-  (semana) => {
+  (semana) =>
     semana.appendChild(
       createADMCard()
-    );
-  }
+    )
 );
 
 DOM.faltasContainer?.appendChild(
@@ -920,5 +671,5 @@ DOM.faltasContainer?.appendChild(
 
 console.log(
   "%c🩸 Sistema Carmesim iniciado.",
-  "color: crimson; font-size: 14px; font-weight: bold;"
+  "color: crimson; font-size:14px; font-weight:bold;"
 );
