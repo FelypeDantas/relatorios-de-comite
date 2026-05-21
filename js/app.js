@@ -476,31 +476,53 @@ function gerarMetricas() {
 ========================================================= */
 
 function gerarRelatorioHTML() {
-  const metricas =
-    gerarMetricas();
+  const metricas = gerarMetricas();
+
+  const mes =
+    document.querySelector("#mes")
+      ?.value || "-";
+
+  const ano =
+    document.querySelector("#ano")
+      ?.value || "-";
+
+  const meta =
+    document.querySelector("#meta")
+      ?.value || "-";
+
+  const observacoes =
+    document.querySelector(
+      "#observacoes"
+    )?.value || "Nenhuma.";
+
+  const semanas =
+    coletarSemanas();
+
+  const faltas =
+    coletarFaltas();
 
   return `
     <div
       style="
-        padding: 48px;
         font-family: Arial, sans-serif;
         color: #111;
+        line-height: 1.6;
       "
     >
 
       <h1
         style="
-          font-size: 32px;
-          margin-bottom: 8px;
+          font-size: 30px;
+          margin-bottom: 10px;
         "
       >
-        Relatório Mensal
+        🩸 Relatório Mensal
       </h1>
 
       <p
         style="
-          color: #666;
-          margin-bottom: 32px;
+          color: #555;
+          margin-bottom: 30px;
         "
       >
         Comitê de Atendimento • Sangue Carmesim
@@ -508,56 +530,179 @@ function gerarRelatorioHTML() {
 
       <hr />
 
-      <h2
-        style="
-          margin-top: 30px;
-        "
-      >
-        Métricas gerais
+      <h2 style="margin-top: 30px;">
+        Informações Gerais
       </h2>
 
-      <ul
-        style="
-          line-height: 1.8;
-        "
-      >
+      <ul>
         <li>
-          Total de registros:
+          <strong>Mês:</strong>
+          ${mes}
+        </li>
+
+        <li>
+          <strong>Ano:</strong>
+          ${ano}
+        </li>
+
+        <li>
+          <strong>Meta:</strong>
+          ${meta}
+        </li>
+      </ul>
+
+      <h2 style="margin-top: 30px;">
+        Métricas
+      </h2>
+
+      <ul>
+        <li>
+          <strong>Total de registros:</strong>
           ${metricas.totalADMS}
         </li>
 
         <li>
-          Prazos cumpridos:
+          <strong>Prazos cumpridos:</strong>
           ${metricas.totalCumpridos}
         </li>
 
         <li>
-          Prazos não cumpridos:
+          <strong>Prazos não cumpridos:</strong>
           ${metricas.totalNaoCumpridos}
         </li>
 
         <li>
-          Faltas registradas:
+          <strong>Total de faltas:</strong>
           ${metricas.totalFaltas}
         </li>
       </ul>
 
-      <h2
-        style="
-          margin-top: 30px;
-        "
-      >
-        Análise automática
-      </h2>
+      ${semanas
+        .map(
+          (semana, index) => `
+            <div
+              style="
+                margin-top: 40px;
+              "
+            >
 
-      <p>
-        ${metricas.desempenho}
-      </p>
+              <h2>
+                📇 ${index + 1}ª Semana
+              </h2>
+
+              ${
+                semana.length === 0
+                  ? `
+                    <p>
+                      Nenhum registro.
+                    </p>
+                  `
+                  : semana
+                      .map(
+                        (adm) => `
+                          <div
+                            style="
+                              border: 1px solid #ccc;
+                              border-radius: 10px;
+                              padding: 15px;
+                              margin-top: 15px;
+                            "
+                          >
+
+                            <p>
+                              <strong>ADM:</strong>
+                              ${adm.adm || "-"}
+                            </p>
+
+                            <p>
+                              <strong>Contribuição:</strong>
+                              ${adm.contribuicao || "-"}
+                            </p>
+
+                            <p>
+                              <strong>Prazo:</strong>
+                              ${adm.prazo || "-"}
+                            </p>
+
+                          </div>
+                        `
+                      )
+                      .join("")
+              }
+
+            </div>
+          `
+        )
+        .join("")}
+
+      <div style="margin-top: 40px;">
+
+        <h2>
+          ⚠️ Faltas
+        </h2>
+
+        ${
+          faltas.length === 0
+            ? `
+              <p>
+                Nenhuma falta registrada.
+              </p>
+            `
+            : faltas
+                .map(
+                  (falta) => `
+                    <div
+                      style="
+                        border: 1px solid #ccc;
+                        border-radius: 10px;
+                        padding: 15px;
+                        margin-top: 15px;
+                      "
+                    >
+
+                      <p>
+                        <strong>ADM:</strong>
+                        ${falta.adm || "-"}
+                      </p>
+
+                      <p>
+                        <strong>Ocorrido:</strong>
+                        ${falta.ocorrido || "-"}
+                      </p>
+
+                      <p>
+                        <strong>Quantidade:</strong>
+                        ${falta.quantidade || "-"}
+                      </p>
+
+                      <p>
+                        <strong>Advertência:</strong>
+                        ${falta.advertencia || "-"}
+                      </p>
+
+                    </div>
+                  `
+                )
+                .join("")
+        }
+
+      </div>
+
+      <div style="margin-top: 40px;">
+
+        <h2>
+          📝 Observações Finais
+        </h2>
+
+        <p>
+          ${observacoes}
+        </p>
+
+      </div>
 
     </div>
   `;
 }
-
 /* =========================================================
    📄 PDF
 ========================================================= */
