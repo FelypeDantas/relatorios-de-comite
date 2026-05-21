@@ -563,10 +563,7 @@ function gerarRelatorioHTML() {
 ========================================================= */
 
 async function gerarPDF() {
-  if (
-    typeof html2pdf ===
-    "undefined"
-  ) {
+  if (typeof html2pdf === "undefined") {
     alert(
       "Biblioteca html2pdf não encontrada."
     );
@@ -574,84 +571,72 @@ async function gerarPDF() {
     return;
   }
 
-  const container =
-    createElement("div");
-
-  container.id =
-    "pdf-temp";
-
-  Object.assign(
-    container.style,
-    {
-      position:
-        "fixed",
-
-      left: "-9999px",
-
-      top: "0",
-
-      width: "210mm",
-
-      minHeight:
-        "297mm",
-
-      background:
-        "#ffffff",
-
-      color: "#111111",
-    }
-  );
-
-  container.innerHTML =
+  const relatorioHTML =
     gerarRelatorioHTML();
 
+  const wrapper =
+    document.createElement("div");
+
+  wrapper.innerHTML = `
+    <div
+      id="pdf-content"
+      style="
+        background: #ffffff;
+        color: #111111;
+        padding: 40px;
+        width: 794px;
+        min-height: 1123px;
+        font-family: Arial, sans-serif;
+      "
+    >
+      ${relatorioHTML}
+    </div>
+  `;
+
   document.body.appendChild(
-    container
+    wrapper
   );
 
+  const pdfElement =
+    wrapper.querySelector(
+      "#pdf-content"
+    );
+
   try {
-    await html2pdf()
-      .set({
-        margin:
-          CONFIG.PDF.margin,
+    await html2pdf(pdfElement, {
+      margin: 10,
 
-        filename:
-          CONFIG.PDF
-            .filename,
+      filename:
+        CONFIG.PDF.filename,
 
-        image: {
-          type: "jpeg",
-          quality: 1,
-        },
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
 
-        html2canvas: {
-          scale:
-            CONFIG.PDF
-              .scale,
+      html2canvas: {
+        scale: 2,
+        logging: false,
+      },
 
-          useCORS: true,
-        },
-
-        jsPDF: {
-          unit: "mm",
-          format: "a4",
-          orientation:
-            "portrait",
-        },
-      })
-      .from(container)
-      .save();
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation:
+          "portrait",
+      },
+    });
   } catch (error) {
     console.error(
-      "ERRO PDF:",
+      "ERRO AO GERAR PDF:",
       error
     );
 
     alert(
-      "Erro ao gerar relatório."
+      "Erro ao gerar PDF."
     );
   } finally {
-    container.remove();
+    wrapper.remove();
   }
 }
 
