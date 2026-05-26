@@ -6,41 +6,68 @@ export async function gerarPDF({
   filename,
   dados,
 }) {
-  if (typeof window.html2pdf === "undefined") {
-    alert("html2pdf não encontrado.");
+  if (
+    typeof window.html2pdf ===
+    "undefined"
+  ) {
+    alert(
+      "html2pdf não encontrado."
+    );
+
     return;
   }
 
-  const container = criarContainerPDF();
+  const container =
+    criarContainer();
 
   container.innerHTML =
-    gerarRelatorioHTML(dados);
+    gerarHTML(dados);
 
-  document.body.appendChild(container);
+  document.body.appendChild(
+    container
+  );
 
   try {
+    /* =====================================================
+       ⏳ Espera renderizar
+    ===================================================== */
+
+    await esperarRenderizacao();
+
     await html2pdf()
-      .from(container)
       .set({
         margin: 10,
 
         filename,
 
+        image: {
+          type: "jpeg",
+          quality: 1,
+        },
+
         html2canvas: {
           scale: 2,
+
+          useCORS: true,
+
+          logging: false,
         },
 
         jsPDF: {
           unit: "mm",
           format: "a4",
-          orientation: "portrait",
+          orientation:
+            "portrait",
         },
       })
+      .from(container)
       .save();
   } catch (error) {
     console.error(error);
 
-    alert("Erro ao gerar PDF.");
+    alert(
+      "Erro ao gerar PDF."
+    );
   } finally {
     container.remove();
   }
@@ -50,24 +77,54 @@ export async function gerarPDF({
    🧱 CONTAINER
 ========================================================= */
 
-function criarContainerPDF() {
+function criarContainer() {
   const container =
     document.createElement("div");
 
   Object.assign(container.style, {
-    background: "#fff",
-    padding: "40px",
+    position: "fixed",
+    top: "0",
+    left: "0",
+
     width: "794px",
+
+    padding: "40px",
+
+    background: "#ffffff",
+
+    color: "#111111",
+
+    zIndex: "-1",
+
+    opacity: "1",
+
+    overflow: "hidden",
   });
 
   return container;
 }
 
 /* =========================================================
-   📄 TEMPLATE
+   ⏳ WAIT RENDER
 ========================================================= */
 
-function gerarRelatorioHTML({
+function esperarRenderizacao() {
+  return new Promise(
+    (resolve) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(
+          resolve
+        );
+      });
+    }
+  );
+}
+
+/* =========================================================
+   📄 HTML
+========================================================= */
+
+function gerarHTML({
   mes,
   ano,
   meta,
@@ -76,33 +133,68 @@ function gerarRelatorioHTML({
   faltas,
 }) {
   return `
-    <div style="font-family:Arial;color:#111;">
-      ${sectionTitulo(
-        "🩸 Relatório Mensal"
-      )}
+    <div
+      style="
+        font-family:Arial,sans-serif;
+        color:#111;
+      "
+    >
 
-      <p>Comitê de Atendimento</p>
+      <style>
+        h1{
+          font-size:28px;
+          margin-bottom:10px;
+        }
+
+        h2{
+          font-size:20px;
+          margin-bottom:10px;
+        }
+
+        p{
+          margin:6px 0;
+        }
+
+        .pdf-section{
+          margin-top:30px;
+        }
+
+        .pdf-card{
+          border:1px solid #ccc;
+          border-radius:10px;
+          padding:12px;
+          margin-top:10px;
+        }
+      </style>
+
+      <h1>
+        🩸 Relatório Mensal
+      </h1>
+
+      <p>
+        Comitê de Atendimento
+      </p>
 
       <hr />
 
-      ${sectionTitulo(
-        "Informações Gerais",
-        "h2"
-      )}
+      <div class="pdf-section">
+        <h2>
+          Informações Gerais
+        </h2>
 
-      ${info("Mês", mes)}
-      ${info("Ano", ano)}
-      ${info("Meta", meta)}
+        ${info("Mês", mes)}
+        ${info("Ano", ano)}
+        ${info("Meta", meta)}
+      </div>
 
-      ${semanasHTML(semanas)}
+      ${renderSemanas(semanas)}
 
-      ${faltasHTML(faltas)}
+      ${renderFaltas(faltas)}
 
-      <div style="margin-top:30px;">
-        ${sectionTitulo(
-          "📝 Observações",
-          "h2"
-        )}
+      <div class="pdf-section">
+        <h2>
+          📝 Observações
+        </h2>
 
         <p>
           ${
@@ -111,117 +203,118 @@ function gerarRelatorioHTML({
           }
         </p>
       </div>
+
     </div>
   `;
 }
 
 /* =========================================================
-   🧩 SECTIONS
+   📅 SEMANAS
 ========================================================= */
 
-function semanasHTML(semanas) {
+function renderSemanas(
+  semanas
+) {
   return semanas
     .map(
       (semana, index) => `
-        <div style="margin-top:30px;">
-          ${sectionTitulo(
-            `${index + 1}ª Semana`,
-            "h2"
-          )}
+        <div class="pdf-section">
+
+          <h2>
+            ${index + 1}ª Semana
+          </h2>
 
           ${semana
             .map(
               (registro) => `
-                ${cardHTML([
-                  info(
+                <div class="pdf-card">
+
+                  ${info(
                     "ADM",
                     registro.adm
-                  ),
-                  info(
+                  )}
+
+                  ${info(
                     "Contribuição",
                     registro.contribuicao
-                  ),
-                  info(
+                  )}
+
+                  ${info(
                     "Prazo",
                     registro.prazo
-                  ),
-                ])}
+                  )}
+
+                </div>
               `
             )
             .join("")}
+
         </div>
       `
     )
     .join("");
 }
 
-function faltasHTML(faltas) {
+/* =========================================================
+   ⚠️ FALTAS
+========================================================= */
+
+function renderFaltas(
+  faltas
+) {
   return `
-    <div style="margin-top:30px;">
-      ${sectionTitulo(
-        "⚠️ Faltas",
-        "h2"
-      )}
+    <div class="pdf-section">
+
+      <h2>
+        ⚠️ Faltas
+      </h2>
 
       ${faltas
         .map(
           (falta) => `
-            ${cardHTML([
-              info(
+            <div class="pdf-card">
+
+              ${info(
                 "ADM",
                 falta.adm
-              ),
-              info(
+              )}
+
+              ${info(
                 "Ocorrido",
                 falta.ocorrido
-              ),
-              info(
+              )}
+
+              ${info(
                 "Quantidade",
                 falta.quantidade
-              ),
-              info(
+              )}
+
+              ${info(
                 "Advertência",
                 falta.advertencia
-              ),
-            ])}
+              )}
+
+            </div>
           `
         )
         .join("")}
+
     </div>
   `;
 }
 
 /* =========================================================
-   🎨 COMPONENTS
+   🧠 HELPERS
 ========================================================= */
 
-function sectionTitulo(
-  texto,
-  tag = "h1"
+function info(
+  label,
+  value
 ) {
-  return `<${tag}>${texto}</${tag}>`;
-}
-
-function info(label, value) {
   return `
     <p>
       <strong>${label}:</strong>
       ${value || "-"}
     </p>
-  `;
-}
-
-function cardHTML(content) {
-  return `
-    <div
-      style="
-        border:1px solid #ccc;
-        padding:12px;
-        margin-top:10px;
-        border-radius:10px;
-      "
-    >
-      ${content.join("")}
-    </div>
   `;
 }
