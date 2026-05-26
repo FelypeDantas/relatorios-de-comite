@@ -1,13 +1,30 @@
 /* =========================================================
    🩸 SANGUE CARMESIM • ATENDIMENTO
 ========================================================= */
+
 import { gerarPDF } from "./pdf.js";
+
+/* =========================================================
+   ⚙️ HELPERS
+========================================================= */
 
 const $ = (selector) =>
   document.querySelector(selector);
 
 const $$ = (selector) =>
   [...document.querySelectorAll(selector)];
+
+const createElement = (
+  tag,
+  className = ""
+) => {
+  const element =
+    document.createElement(tag);
+
+  element.className = className;
+
+  return element;
+};
 
 /* =========================================================
    ⚙️ CONFIG
@@ -16,10 +33,8 @@ const $$ = (selector) =>
 const CONFIG = {
   MAX_ADMS: 20,
 
-  PDF: {
-    filename:
-      "relatorio-atendimento.pdf",
-  },
+  PDF_FILENAME:
+    "relatorio-atendimento.pdf",
 };
 
 /* =========================================================
@@ -62,61 +77,51 @@ const CLASSES = {
   card:
     "adm-card bg-zinc-950/70 border border-zinc-800 rounded-3xl p-6 space-y-6",
 
-  buttonRemove:
+  removeButton:
     "w-full py-3 rounded-2xl bg-red-950/40 hover:bg-red-900/50 border border-red-800/40 text-red-300 transition-all",
 };
 
 /* =========================================================
-   🧠 HELPERS
+   🧱 FACTORIES
 ========================================================= */
-
-function createElement(
-  tag,
-  className = ""
-) {
-  const element =
-    document.createElement(tag);
-
-  element.className =
-    className;
-
-  return element;
-}
 
 function createInput({
   type = "text",
   placeholder = "",
-} = {}) {
-  const input =
-    createElement(
-      "input",
-      CLASSES.input
-    );
+  field,
+}) {
+  const input = createElement(
+    "input",
+    CLASSES.input
+  );
 
   input.type = type;
-
   input.placeholder =
     placeholder;
+
+  input.dataset.field = field;
 
   return input;
 }
 
-function createSelect(
-  options = []
-) {
+function createSelect({
+  options = [],
+  field,
+}) {
   const select =
     createElement(
       "select",
       CLASSES.input
     );
 
-  select.innerHTML =
-    options
-      .map(
-        (option) =>
-          `<option>${option}</option>`
-      )
-      .join("");
+  select.dataset.field = field;
+
+  select.innerHTML = options
+    .map(
+      (option) =>
+        `<option value="${option}">${option}</option>`
+    )
+    .join("");
 
   return select;
 }
@@ -137,21 +142,18 @@ function createField(
   label.textContent =
     labelText;
 
-  wrapper.append(
-    label,
-    input
-  );
+  wrapper.append(label, input);
 
   return wrapper;
 }
 
 function createRemoveButton(
-  callback
+  element
 ) {
   const button =
     createElement(
       "button",
-      CLASSES.buttonRemove
+      CLASSES.removeButton
     );
 
   button.type = "button";
@@ -159,166 +161,189 @@ function createRemoveButton(
   button.textContent =
     "Remover";
 
-  button.onclick =
-    callback;
+  button.addEventListener(
+    "click",
+    () => element.remove()
+  );
 
   return button;
 }
 
+function createCard({
+  columns = 3,
+  fields = [],
+}) {
+  const card =
+    createElement(
+      "div",
+      CLASSES.card
+    );
+
+  const grid =
+    createElement(
+      "div",
+      `grid grid-cols-1 lg:grid-cols-${columns} gap-6`
+    );
+
+  grid.append(...fields);
+
+  card.append(
+    grid,
+    createRemoveButton(card)
+  );
+
+  return card;
+}
+
 /* =========================================================
-   👥 CARD ADM
+   👥 ADM CARD
 ========================================================= */
 
 function createADMCard() {
-  const card =
-    createElement(
-      "div",
-      CLASSES.card
-    );
+  return createCard({
+    columns: 3,
 
-  const grid =
-    createElement(
-      "div",
-      "grid grid-cols-1 lg:grid-cols-3 gap-6"
-    );
+    fields: [
+      createField(
+        "ADM",
 
-  const fields = [
-    createField(
-      "ADM",
-      createInput({
-        placeholder:
-          "Nome do ADM",
-      })
-    ),
+        createInput({
+          field: "adm",
 
-    createField(
-      "Contribuição",
-      createInput({
-        placeholder:
-          "Ex: 15 atendimentos",
-      })
-    ),
+          placeholder:
+            "Nome do ADM",
+        })
+      ),
 
-    createField(
-      "Prazo cumprido?",
-      createSelect([
-        "Selecione",
-        "Sim",
-        "Não",
-      ])
-    ),
-  ];
+      createField(
+        "Contribuição",
 
-  grid.append(...fields);
+        createInput({
+          field:
+            "contribuicao",
 
-  card.append(
-    grid,
-    createRemoveButton(() =>
-      card.remove()
-    )
-  );
+          placeholder:
+            "Ex: 15 atendimentos",
+        })
+      ),
 
-  return card;
+      createField(
+        "Prazo cumprido?",
+
+        createSelect({
+          field: "prazo",
+
+          options: [
+            "Selecione",
+            "Sim",
+            "Não",
+          ],
+        })
+      ),
+    ],
+  });
 }
 
 /* =========================================================
-   ⚠️ CARD FALTA
+   ⚠️ FALTA CARD
 ========================================================= */
 
 function createFaltaCard() {
-  const card =
-    createElement(
-      "div",
-      CLASSES.card
-    );
+  return createCard({
+    columns: 4,
 
-  const grid =
-    createElement(
-      "div",
-      "grid grid-cols-1 lg:grid-cols-4 gap-6"
-    );
+    fields: [
+      createField(
+        "ADM",
 
-  const fields = [
-    createField(
-      "ADM",
-      createInput({
-        placeholder:
-          "Nome do ADM",
-      })
-    ),
+        createInput({
+          field: "adm",
 
-    createField(
-      "Ocorrido",
-      createInput({
-        placeholder:
-          "Descrição",
-      })
-    ),
+          placeholder:
+            "Nome do ADM",
+        })
+      ),
 
-    createField(
-      "Quantidade",
-      createInput({
-        type: "number",
-        placeholder: "0",
-      })
-    ),
+      createField(
+        "Ocorrido",
 
-    createField(
-      "Advertência?",
-      createSelect([
-        "Selecione",
-        "Sim",
-        "Não",
-      ])
-    ),
-  ];
+        createInput({
+          field: "ocorrido",
 
-  grid.append(...fields);
+          placeholder:
+            "Descrição",
+        })
+      ),
 
-  card.append(
-    grid,
-    createRemoveButton(() =>
-      card.remove()
-    )
-  );
+      createField(
+        "Quantidade",
 
-  return card;
+        createInput({
+          field: "quantidade",
+
+          type: "number",
+
+          placeholder: "0",
+        })
+      ),
+
+      createField(
+        "Advertência?",
+
+        createSelect({
+          field:
+            "advertencia",
+
+          options: [
+            "Selecione",
+            "Sim",
+            "Não",
+          ],
+        })
+      ),
+    ],
+  });
 }
 
 /* =========================================================
-   📊 COLETA DE DADOS
+   📊 DATA
 ========================================================= */
+
+function getField(
+  card,
+  field
+) {
+  return (
+    card.querySelector(
+      `[data-field="${field}"]`
+    )?.value || "-"
+  );
+}
 
 function coletarSemanas() {
   return DOM.semanas.map(
-    (semana) => {
-      return [
+    (semana) =>
+      [
         ...semana.querySelectorAll(
           ".adm-card"
         ),
-      ].map((card) => {
-        const [
-          adm,
-          contribuicao,
-          prazo,
-        ] =
-          card.querySelectorAll(
-            "input, select"
-          );
+      ].map((card) => ({
+        adm: getField(
+          card,
+          "adm"
+        ),
 
-        return {
-          adm:
-            adm.value || "-",
+        contribuicao:
+          getField(
+            card,
+            "contribuicao"
+          ),
 
-          contribuicao:
-            contribuicao.value ||
-            "-",
-
-          prazo:
-            prazo.value || "-",
-        };
-      });
-    }
+        prazo: getField(
+          card,
+          "prazo"
+        ),
+      }))
   );
 }
 
@@ -327,191 +352,29 @@ function coletarFaltas() {
     ...DOM.faltasContainer.querySelectorAll(
       ".adm-card"
     ),
-  ].map((card) => {
-    const [
-      adm,
-      ocorrido,
-      quantidade,
-      advertencia,
-    ] =
-      card.querySelectorAll(
-        "input, select"
-      );
+  ].map((card) => ({
+    adm: getField(
+      card,
+      "adm"
+    ),
 
-    return {
-      adm:
-        adm.value || "-",
+    ocorrido: getField(
+      card,
+      "ocorrido"
+    ),
 
-      ocorrido:
-        ocorrido.value ||
-        "-",
+    quantidade:
+      getField(
+        card,
+        "quantidade"
+      ),
 
-      quantidade:
-        quantidade.value ||
-        "-",
-
-      advertencia:
-        advertencia.value ||
-        "-",
-    };
-  });
-}
-
-/* =========================================================
-   📄 HTML PDF
-========================================================= */
-
-function gerarRelatorioHTML() {
-  const semanas =
-    coletarSemanas();
-
-  const faltas =
-    coletarFaltas();
-
-  return `
-    <div style="font-family: Arial; color: #111;">
-
-      <h1>
-        🩸 Relatório Mensal
-      </h1>
-
-      <p>
-        Comitê de Atendimento
-      </p>
-
-      <hr />
-
-      <h2>
-        Informações Gerais
-      </h2>
-
-      <p>
-        <strong>Mês:</strong>
-        ${DOM.mes.value || "-"}
-      </p>
-
-      <p>
-        <strong>Ano:</strong>
-        ${DOM.ano.value || "-"}
-      </p>
-
-      <p>
-        <strong>Meta:</strong>
-        ${DOM.meta.value || "-"}
-      </p>
-
-      ${semanas
-        .map(
-          (
-            semana,
-            index
-          ) => `
-            <div style="margin-top:30px;">
-
-              <h2>
-                ${index + 1}ª Semana
-              </h2>
-
-              ${semana
-                .map(
-                  (
-                    registro
-                  ) => `
-                    <div
-                      style="
-                        border:1px solid #ccc;
-                        padding:12px;
-                        margin-top:10px;
-                        border-radius:10px;
-                      "
-                    >
-                      <p>
-                        <strong>ADM:</strong>
-                        ${registro.adm}
-                      </p>
-
-                      <p>
-                        <strong>Contribuição:</strong>
-                        ${registro.contribuicao}
-                      </p>
-
-                      <p>
-                        <strong>Prazo:</strong>
-                        ${registro.prazo}
-                      </p>
-                    </div>
-                  `
-                )
-                .join("")}
-
-            </div>
-          `
-        )
-        .join("")}
-
-      <div style="margin-top:30px;">
-
-        <h2>
-          ⚠️ Faltas
-        </h2>
-
-        ${faltas
-          .map(
-            (
-              falta
-            ) => `
-              <div
-                style="
-                  border:1px solid #ccc;
-                  padding:12px;
-                  margin-top:10px;
-                  border-radius:10px;
-                "
-              >
-                <p>
-                  <strong>ADM:</strong>
-                  ${falta.adm}
-                </p>
-
-                <p>
-                  <strong>Ocorrido:</strong>
-                  ${falta.ocorrido}
-                </p>
-
-                <p>
-                  <strong>Quantidade:</strong>
-                  ${falta.quantidade}
-                </p>
-
-                <p>
-                  <strong>Advertência:</strong>
-                  ${falta.advertencia}
-                </p>
-              </div>
-            `
-          )
-          .join("")}
-
-      </div>
-
-      <div style="margin-top:30px;">
-
-        <h2>
-          📝 Observações
-        </h2>
-
-        <p>
-          ${
-            DOM.observacoes
-              .value ||
-            "Nenhuma observação."
-          }
-        </p>
-
-      </div>
-
-    </div>
-  `;
+    advertencia:
+      getField(
+        card,
+        "advertencia"
+      ),
+  }));
 }
 
 /* =========================================================
@@ -521,8 +384,11 @@ function gerarRelatorioHTML() {
 async function handleGerarPDF() {
   const dados = {
     mes: DOM.mes.value,
+
     ano: DOM.ano.value,
+
     meta: DOM.meta.value,
+
     observacoes:
       DOM.observacoes.value,
 
@@ -531,35 +397,31 @@ async function handleGerarPDF() {
     faltas: coletarFaltas(),
   };
 
-  await gerarPDF({
-    filename:
-      CONFIG.PDF.filename,
+  const button =
+    DOM.gerarPDFButton;
 
-    dados,
-  });
-}
+  const originalText =
+    button.innerHTML;
 
-DOM.gerarPDFButton?.addEventListener(
-  "click",
-  async () => {
-    const originalText =
-      DOM.gerarPDFButton.innerHTML;
+  try {
+    button.disabled = true;
 
-    DOM.gerarPDFButton.disabled =
-      true;
-
-    DOM.gerarPDFButton.innerHTML =
+    button.innerHTML =
       "Gerando PDF...";
 
-    await handleGerarPDF();
+    await gerarPDF({
+      filename:
+        CONFIG.PDF_FILENAME,
 
-    DOM.gerarPDFButton.disabled =
-      false;
+      dados,
+    });
+  } finally {
+    button.disabled = false;
 
-    DOM.gerarPDFButton.innerHTML =
+    button.innerHTML =
       originalText;
   }
-);
+}
 
 /* =========================================================
    🚀 EVENTS
@@ -613,25 +475,7 @@ DOM.addFaltaButton?.addEventListener(
 
 DOM.gerarPDFButton?.addEventListener(
   "click",
-  async () => {
-    const originalText =
-      DOM.gerarPDFButton
-        .innerHTML;
-
-    DOM.gerarPDFButton.disabled =
-      true;
-
-    DOM.gerarPDFButton.innerHTML =
-      "Gerando PDF...";
-
-    await gerarPDF();
-
-    DOM.gerarPDFButton.disabled =
-      false;
-
-    DOM.gerarPDFButton.innerHTML =
-      originalText;
-  }
+  handleGerarPDF
 );
 
 /* =========================================================
@@ -639,10 +483,11 @@ DOM.gerarPDFButton?.addEventListener(
 ========================================================= */
 
 DOM.semanas.forEach(
-  (semana) =>
+  (semana) => {
     semana.appendChild(
       createADMCard()
-    )
+    );
+  }
 );
 
 DOM.faltasContainer?.appendChild(
