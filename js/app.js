@@ -1,6 +1,7 @@
 /* =========================================================
    🩸 SANGUE CARMESIM • ATENDIMENTO
 ========================================================= */
+import { gerarPDF } from "./pdf.js";
 
 const $ = (selector) =>
   document.querySelector(selector);
@@ -517,69 +518,48 @@ function gerarRelatorioHTML() {
    📄 PDF
 ========================================================= */
 
-async function gerarPDF() {
-  if (
-    typeof window.html2pdf ===
-    "undefined"
-  ) {
-    alert(
-      "html2pdf não encontrado."
-    );
+async function handleGerarPDF() {
+  const dados = {
+    mes: DOM.mes.value,
+    ano: DOM.ano.value,
+    meta: DOM.meta.value,
+    observacoes:
+      DOM.observacoes.value,
 
-    return;
-  }
+    semanas: coletarSemanas(),
 
-  const container =
-    document.createElement("div");
+    faltas: coletarFaltas(),
+  };
 
-  container.style.background =
-    "#fff";
+  await gerarPDF({
+    filename:
+      CONFIG.PDF.filename,
 
-  container.style.padding =
-    "40px";
-
-  container.style.width =
-    "794px";
-
-  container.innerHTML =
-    gerarRelatorioHTML();
-
-  document.body.appendChild(
-    container
-  );
-
-  try {
-    await html2pdf()
-      .from(container)
-      .set({
-        margin: 10,
-
-        filename:
-          CONFIG.PDF
-            .filename,
-
-        html2canvas: {
-          scale: 2,
-        },
-
-        jsPDF: {
-          unit: "mm",
-          format: "a4",
-          orientation:
-            "portrait",
-        },
-      })
-      .save();
-  } catch (error) {
-    console.error(error);
-
-    alert(
-      "Erro ao gerar PDF."
-    );
-  } finally {
-    container.remove();
-  }
+    dados,
+  });
 }
+
+DOM.gerarPDFButton?.addEventListener(
+  "click",
+  async () => {
+    const originalText =
+      DOM.gerarPDFButton.innerHTML;
+
+    DOM.gerarPDFButton.disabled =
+      true;
+
+    DOM.gerarPDFButton.innerHTML =
+      "Gerando PDF...";
+
+    await handleGerarPDF();
+
+    DOM.gerarPDFButton.disabled =
+      false;
+
+    DOM.gerarPDFButton.innerHTML =
+      originalText;
+  }
+);
 
 /* =========================================================
    🚀 EVENTS
