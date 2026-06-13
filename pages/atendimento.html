@@ -21,62 +21,166 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen text-white">
+<body class="min-h-screen text-white overflow-x-hidden">
 
-  <main class="max-w-7xl mx-auto px-6 py-10">
+  <!-- ORBS -->
+  <div class="blood-orb fixed top-0 left-0 w-96 h-96 bg-red-900/20 rounded-full blur-[120px]"></div>
+  <div class="blood-orb fixed bottom-0 right-0 w-96 h-96 bg-red-950/20 rounded-full blur-[120px]"></div>
+
+  <!-- SIDEBAR -->
+  <aside
+    class="hidden xl:flex fixed right-6 top-1/2 -translate-y-1/2 flex-col gap-4 z-50">
+
+    <button
+      class="w-14 h-14 rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl hover:border-red-700/40 transition">
+      📄
+    </button>
+
+    <button
+      class="w-14 h-14 rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl hover:border-red-700/40 transition">
+      💾
+    </button>
+
+    <button
+      class="w-14 h-14 rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl hover:border-red-700/40 transition">
+      📊
+    </button>
+
+  </aside>
+
+  <main class="relative z-10 max-w-7xl mx-auto px-6 py-10">
 
     <!-- HEADER -->
-    <header class="mb-12">
+    <header
+      class="mb-12 rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
       <a
         href="../index.html"
-        class="inline-flex items-center gap-2 text-zinc-400 hover:text-red-400 transition-colors mb-6"
-      >
-        ← Voltar
+        class="inline-flex items-center gap-2 text-zinc-400 hover:text-red-400 transition-colors mb-8">
+
+        ← Voltar ao painel
+
       </a>
 
-      <div class="flex items-center gap-5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
 
-        <div
-          class="w-16 h-16 rounded-3xl bg-red-900/20 border border-red-800/30 flex items-center justify-center text-3xl"
-        >
-          💬
+        <div class="flex items-center gap-5">
+
+          <div
+            class="w-20 h-20 rounded-3xl bg-red-900/20 border border-red-800/30 flex items-center justify-center text-4xl">
+
+            💬
+
+          </div>
+
+          <div>
+
+            <span
+              class="inline-flex items-center gap-2 rounded-full border border-red-900/40 bg-red-950/30 px-4 py-2 text-sm text-red-300 mb-4">
+
+              🩸 Comitê Operacional
+
+            </span>
+
+            <h1 class="text-4xl md:text-5xl font-black">
+              Comitê de Atendimento
+            </h1>
+
+            <p class="text-zinc-400 mt-3">
+              Sistema de relatórios mensais e acompanhamento operacional.
+            </p>
+
+          </div>
+
         </div>
 
-        <div>
-          <h1 class="text-4xl font-black">
-            Comitê de Atendimento
-          </h1>
+      </div>
 
-          <p class="text-zinc-400 mt-2">
-            Relatório mensal operacional
+      <!-- STATS -->
+      <div class="grid md:grid-cols-3 gap-4 mt-10">
+
+        <div
+          class="rounded-3xl border border-zinc-800 bg-zinc-950/40 p-5">
+
+          <p class="text-zinc-500 text-sm">
+            Comitê
           </p>
+
+          <h3 class="font-black text-2xl mt-2">
+            Atendimento
+          </h3>
+
+        </div>
+
+        <div
+          class="rounded-3xl border border-zinc-800 bg-zinc-950/40 p-5">
+
+          <p class="text-zinc-500 text-sm">
+            Status
+          </p>
+
+          <h3 class="font-black text-2xl mt-2 text-emerald-400">
+            Operacional
+          </h3>
+
+        </div>
+
+        <div
+          class="rounded-3xl border border-zinc-800 bg-zinc-950/40 p-5">
+
+          <p class="text-zinc-500 text-sm">
+            Tipo
+          </p>
+
+          <h3 class="font-black text-2xl mt-2">
+            Relatório Mensal
+          </h3>
+
         </div>
 
       </div>
 
     </header>
 
+    <!-- HERO -->
+    <section
+      class="mb-12 overflow-hidden rounded-[2rem] border border-red-900/20 bg-gradient-to-r from-red-950/20 via-zinc-900/40 to-zinc-900/40 p-10">
+
+      <h2 class="text-5xl md:text-6xl font-black">
+
+        Central de Avaliação
+
+        <span class="block text-red-500">
+          Atendimento
+        </span>
+
+      </h2>
+
+      <p class="mt-5 max-w-3xl text-zinc-400 leading-relaxed">
+        Registre contribuições semanais, faltas, desempenho dos ADMs,
+        observações e gere relatórios profissionais em PDF.
+      </p>
+
+    </section>
+
     <!-- FORM -->
     <form
       id="relatorio-form"
-      class="space-y-10"
-    >
+      class="space-y-10">
 
-      <!-- DADOS GERAIS -->
-      <section class="glass section-border rounded-3xl p-8 border border-zinc-800">
+      <!-- INFORMAÇÕES -->
+      <section
+        class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-        <div class="mb-8">
-          <h2 class="text-2xl font-bold mb-2">
-            Informações gerais
-          </h2>
+        <h2 class="text-2xl font-black mb-2">
+          📌 Informações Gerais
+        </h2>
 
-          <p class="text-zinc-500">
-            Dados principais do relatório mensal.
-          </p>
+        <div
+          class="h-px bg-gradient-to-r from-transparent via-red-900/60 to-transparent my-6">
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid md:grid-cols-3 gap-6">
 
           <div>
             <label class="input-label">
@@ -87,8 +191,7 @@
               id="mes"
               type="text"
               placeholder="Ex: Maio"
-              class="input"
-            />
+              class="input">
           </div>
 
           <div>
@@ -100,8 +203,7 @@
               id="ano"
               type="number"
               placeholder="2026"
-              class="input"
-            />
+              class="input">
           </div>
 
           <div>
@@ -113,8 +215,7 @@
               id="meta"
               type="text"
               placeholder="Ex: 150 atendimentos"
-              class="input"
-            />
+              class="input">
           </div>
 
         </div>
@@ -122,230 +223,172 @@
       </section>
 
       <!-- SEMANAS -->
-      <div class="space-y-8">
+      <section
+        class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-        <!-- SEMANAS DINÂMICAS -->
-        <section
-          class="glass section-border rounded-3xl p-8 border border-zinc-800"
-        >
+        <div class="mb-10">
 
-          <div class="flex items-center justify-between mb-8">
+          <h2 class="text-2xl font-black">
+            📇 Controle Semanal
+          </h2>
 
-            <div>
-              <h2 class="text-2xl font-bold">
-                📇 Semanas
-              </h2>
+          <p class="text-zinc-500 mt-2">
+            Registro das contribuições e produtividade.
+          </p>
 
-              <p class="text-zinc-500 mt-1">
-                Registre as contribuições semanais.
-              </p>
+        </div>
+
+        <div class="space-y-10">
+
+          <!-- SEMANA 1 -->
+          <div
+            data-semana-wrapper="1"
+            class="rounded-3xl border border-zinc-800 bg-zinc-950/30 p-6">
+
+            <div class="flex justify-between items-center mb-6">
+
+              <h3 class="text-xl font-black text-red-300">
+                🔥 1ª Semana
+              </h3>
+
+              <button
+                type="button"
+                data-add-adm="1"
+                class="add-button">
+                + Adicionar ADM
+              </button>
+
+            </div>
+
+            <div
+              data-semana="1"
+              class="space-y-6">
             </div>
 
           </div>
 
-          <div class="space-y-10">
-
-            <!-- LOOP DE SEMANAS -->
-            <div
-              class="space-y-6"
-              data-semana-wrapper="1"
-            >
-
-              <div class="flex items-center justify-between">
-
-                <h3 class="text-xl font-bold">
-                  1ª Semana
-                </h3>
-
-                <button
-                  type="button"
-                  data-add-adm="1"
-                  class="add-button"
-                >
-                  + Adicionar ADM
-                </button>
-
-              </div>
-
-              <div
-                class="space-y-6"
-                data-semana="1"
-              ></div>
-
+          <!-- SEMANA 2 -->
+          <div data-semana-wrapper="2" class="rounded-3xl border border-zinc-800 bg-zinc-950/30 p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-xl font-black text-red-300">🔥 2ª Semana</h3>
+              <button type="button" data-add-adm="2" class="add-button">+ Adicionar ADM</button>
             </div>
-
-            <div
-              class="space-y-6"
-              data-semana-wrapper="2"
-            >
-
-              <div class="flex items-center justify-between">
-
-                <h3 class="text-xl font-bold">
-                  2ª Semana
-                </h3>
-
-                <button
-                  type="button"
-                  data-add-adm="2"
-                  class="add-button"
-                >
-                  + Adicionar ADM
-                </button>
-
-              </div>
-
-              <div
-                class="space-y-6"
-                data-semana="2"
-              ></div>
-
-            </div>
-
-            <div
-              class="space-y-6"
-              data-semana-wrapper="3"
-            >
-
-              <div class="flex items-center justify-between">
-
-                <h3 class="text-xl font-bold">
-                  3ª Semana
-                </h3>
-
-                <button
-                  type="button"
-                  data-add-adm="3"
-                  class="add-button"
-                >
-                  + Adicionar ADM
-                </button>
-
-              </div>
-
-              <div
-                class="space-y-6"
-                data-semana="3"
-              ></div>
-
-            </div>
-
-            <div
-              class="space-y-6"
-              data-semana-wrapper="4"
-            >
-
-              <div class="flex items-center justify-between">
-
-                <h3 class="text-xl font-bold">
-                  4ª Semana
-                </h3>
-
-                <button
-                  type="button"
-                  data-add-adm="4"
-                  class="add-button"
-                >
-                  + Adicionar ADM
-                </button>
-
-              </div>
-
-              <div
-                class="space-y-6"
-                data-semana="4"
-              ></div>
-
-            </div>
-
+            <div data-semana="2" class="space-y-6"></div>
           </div>
 
-        </section>
+          <!-- SEMANA 3 -->
+          <div data-semana-wrapper="3" class="rounded-3xl border border-zinc-800 bg-zinc-950/30 p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-xl font-black text-red-300">🔥 3ª Semana</h3>
+              <button type="button" data-add-adm="3" class="add-button">+ Adicionar ADM</button>
+            </div>
+            <div data-semana="3" class="space-y-6"></div>
+          </div>
 
-      </div>
+          <!-- SEMANA 4 -->
+          <div data-semana-wrapper="4" class="rounded-3xl border border-zinc-800 bg-zinc-950/30 p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-xl font-black text-red-300">🔥 4ª Semana</h3>
+              <button type="button" data-add-adm="4" class="add-button">+ Adicionar ADM</button>
+            </div>
+            <div data-semana="4" class="space-y-6"></div>
+          </div>
+
+        </div>
+
+      </section>
 
       <!-- FALTAS -->
-      <section class="glass section-border rounded-3xl p-8 border border-zinc-800">
+      <section
+        class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-        <div class="flex items-center justify-between mb-8">
+        <div class="flex justify-between items-center mb-8">
 
           <div>
-            <h2 class="text-2xl font-bold">
-              ⚠️ Faltas cometidas
+
+            <h2 class="text-2xl font-black">
+              ⚠️ Faltas e Advertências
             </h2>
 
-            <p class="text-zinc-500 mt-1">
-              Registre ocorrências e advertências.
+            <p class="text-zinc-500 mt-2">
+              Controle disciplinar do período.
             </p>
+
           </div>
 
           <button
             type="button"
             id="add-falta"
-            class="add-button"
-          >
-            + Adicionar falta
+            class="add-button">
+
+            + Adicionar Falta
+
           </button>
 
         </div>
 
         <div
           id="faltas-container"
-          class="space-y-6"
-        ></div>
+          class="space-y-6">
+        </div>
 
       </section>
 
-      <!-- OBS -->
-      <section class="glass section-border rounded-3xl p-8 border border-zinc-800">
+      <!-- OBSERVAÇÕES -->
+      <section
+        class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-        <div class="mb-6">
-
-          <h2 class="text-2xl font-bold">
-            📝 Observações finais
-          </h2>
-
-          <p class="text-zinc-500 mt-1">
-            Informações complementares do relatório.
-          </p>
-
-        </div>
+        <h2 class="text-2xl font-black mb-4">
+          📝 Observações Finais
+        </h2>
 
         <textarea
           id="observacoes"
-          rows="6"
-          placeholder="Digite observações adicionais..."
+          rows="7"
           class="textarea"
-        ></textarea>
+          placeholder="Digite observações adicionais..."></textarea>
 
       </section>
 
-      <!-- ACTIONS -->
-      <section class="flex flex-col md:flex-row gap-4 justify-end">
+      <!-- BOTÕES -->
+      <section class="flex flex-col md:flex-row justify-end gap-4">
 
         <button
           type="button"
-          class="secondary-button"
-        >
-          Salvar rascunho
+          class="secondary-button">
+
+          💾 Salvar Rascunho
+
         </button>
 
         <button
           type="button"
           id="gerar-pdf"
-          class="primary-button"
-        >
-          📄 Gerar relatório PDF
+          class="px-8 py-4 rounded-2xl bg-gradient-to-r from-red-700 to-red-500 font-bold shadow-lg shadow-red-950/40 hover:scale-105 transition">
+
+          📄 Gerar Relatório PDF
+
         </button>
 
       </section>
 
     </form>
 
+    <footer class="mt-20 text-center border-t border-zinc-800 pt-8">
+
+      <h3 class="text-red-400 font-bold">
+        Sangue Carmesim
+      </h3>
+
+      <p class="text-zinc-500 mt-2">
+        Comitê de Atendimento • Sistema Operacional Interno
+      </p>
+
+    </footer>
+
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
   <script type="module" src="../js/app.js"></script>
 
 </body>
