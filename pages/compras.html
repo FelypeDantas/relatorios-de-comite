@@ -15,34 +15,117 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen text-white">
+<body class="min-h-screen text-white overflow-x-hidden">
 
-    <main class="max-w-7xl mx-auto px-6 py-10">
+    <!-- ORBS -->
+    <div class="fixed top-0 left-0 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] blood-orb"></div>
+    <div class="fixed bottom-0 right-0 w-96 h-96 bg-yellow-500/10 rounded-full blur-[120px] blood-orb"></div>
+
+    <!-- SIDEBAR -->
+    <aside
+        class="hidden xl:flex fixed right-6 top-1/2 -translate-y-1/2 flex-col gap-4 z-50">
+
+        <button
+            class="w-14 h-14 rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl hover:border-amber-500/40 transition">
+            📦
+        </button>
+
+        <button
+            class="w-14 h-14 rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl hover:border-amber-500/40 transition">
+            💾
+        </button>
+
+        <button
+            class="w-14 h-14 rounded-2xl border border-zinc-800 bg-zinc-900/80 backdrop-blur-xl hover:border-amber-500/40 transition">
+            📊
+        </button>
+
+    </aside>
+
+    <main class="relative z-10 max-w-7xl mx-auto px-6 py-10">
 
         <!-- HEADER -->
-        <header class="mb-12">
+        <header
+            class="mb-12 rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
             <a href="../index.html"
-                class="inline-flex items-center gap-2 text-zinc-400 hover:text-amber-300 transition-colors mb-6">
-                ← Voltar
+                class="inline-flex items-center gap-2 text-zinc-400 hover:text-amber-300 transition-colors mb-8">
+
+                ← Voltar ao painel
+
             </a>
 
             <div class="flex items-center gap-5">
 
                 <div
-                    class="w-16 h-16 rounded-3xl bg-amber-900/10 border border-amber-700/30 flex items-center justify-center text-3xl">
+                    class="w-20 h-20 rounded-3xl bg-amber-900/20 border border-amber-700/30 flex items-center justify-center text-4xl">
+
                     📦
+
                 </div>
 
                 <div>
 
-                    <h1 class="text-4xl font-black title-gradient">
-                        Comitê de Compras & Vendas
+                    <span
+                        class="inline-flex items-center gap-2 rounded-full border border-amber-700/30 bg-amber-900/20 px-4 py-2 text-sm text-amber-300 mb-4">
+
+                        💰 Comitê Operacional
+
+                    </span>
+
+                    <h1 class="text-4xl md:text-5xl font-black">
+
+                        Compras & Vendas
+
                     </h1>
 
                     <p class="text-zinc-400 mt-2">
-                        Relatório mensal operacional e logístico
+                        Relatório mensal operacional e logístico.
                     </p>
+
+                </div>
+
+            </div>
+
+            <!-- STATS -->
+            <div class="grid md:grid-cols-3 gap-4 mt-10">
+
+                <div
+                    class="rounded-3xl border border-zinc-800 bg-zinc-950/40 p-5">
+
+                    <p class="text-zinc-500 text-sm">
+                        Setor
+                    </p>
+
+                    <h3 class="text-2xl font-black mt-2">
+                        Compras
+                    </h3>
+
+                </div>
+
+                <div
+                    class="rounded-3xl border border-zinc-800 bg-zinc-950/40 p-5">
+
+                    <p class="text-zinc-500 text-sm">
+                        Status
+                    </p>
+
+                    <h3 class="text-2xl font-black mt-2 text-emerald-400">
+                        Operacional
+                    </h3>
+
+                </div>
+
+                <div
+                    class="rounded-3xl border border-zinc-800 bg-zinc-950/40 p-5">
+
+                    <p class="text-zinc-500 text-sm">
+                        Relatório
+                    </p>
+
+                    <h3 class="text-2xl font-black mt-2">
+                        Mensal
+                    </h3>
 
                 </div>
 
@@ -50,44 +133,51 @@
 
         </header>
 
-        <!-- FORM -->
+        <!-- HERO -->
+        <section
+            class="mb-12 overflow-hidden rounded-[2rem] border border-amber-700/20 bg-gradient-to-r from-amber-950/20 via-zinc-900/40 to-zinc-900/40 p-10">
+
+            <h2 class="text-5xl md:text-6xl font-black">
+
+                Central de Gestão
+
+                <span class="block text-amber-400">
+                    Compras & Vendas
+                </span>
+
+            </h2>
+
+            <p class="mt-5 max-w-3xl text-zinc-400 leading-relaxed">
+                Controle de pedidos, entregas, contribuintes ativos,
+                produtividade, pagamentos e geração automática de relatórios.
+            </p>
+
+        </section>
+
         <form id="relatorio-compras-form" class="space-y-10">
 
-            <!-- INFORMAÇÕES -->
-            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+            <!-- DADOS -->
+            <section
+                class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-                <div class="mb-8">
+                <h2 class="text-2xl font-black mb-2">
+                    📌 Informações Gerais
+                </h2>
 
-                    <h2 class="text-2xl font-bold mb-2">
-                        Informações gerais
-                    </h2>
-
-                    <p class="text-zinc-500">
-                        Dados principais do relatório mensal.
-                    </p>
-
+                <div
+                    class="h-px bg-gradient-to-r from-transparent via-amber-700/60 to-transparent my-6">
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-2 gap-6">
 
                     <div>
-
-                        <label class="input-label">
-                            Mês
-                        </label>
-
-                        <input id="mes" type="text" placeholder="Ex: Maio" class="input" />
-
+                        <label class="input-label">Mês</label>
+                        <input id="mes" type="text" placeholder="Ex: Maio" class="input">
                     </div>
 
                     <div>
-
-                        <label class="input-label">
-                            Ano
-                        </label>
-
-                        <input id="ano" type="number" placeholder="2026" class="input" />
-
+                        <label class="input-label">Ano</label>
+                        <input id="ano" type="number" placeholder="2026" class="input">
                     </div>
 
                 </div>
@@ -95,66 +185,84 @@
             </section>
 
             <!-- COMPRAS -->
-            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+            <section
+                class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-                <div class="flex items-center justify-between mb-8">
+                <div class="flex justify-between items-center mb-8">
 
                     <div>
 
-                        <h2 class="text-2xl font-bold mb-2">
-                            🛒 Compras realizadas
+                        <h2 class="text-2xl font-black">
+                            🛒 Compras Realizadas
                         </h2>
 
-                        <p class="text-zinc-500">
-                            Registre os pedidos realizados durante o mês.
+                        <p class="text-zinc-500 mt-2">
+                            Registre os pedidos realizados durante o período.
                         </p>
 
                     </div>
 
-                    <button type="button" id="add-compra" class="add-button">
-                        + Adicionar compra
+                    <button
+                        type="button"
+                        id="add-compra"
+                        class="add-button">
+
+                        + Adicionar Compra
+
                     </button>
 
                 </div>
 
-                <div id="compras-container" class="space-y-8"></div>
+                <div
+                    id="compras-container"
+                    class="space-y-8">
+                </div>
 
             </section>
 
             <!-- CONTRIBUINTES -->
-            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+            <section
+                class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-                <div class="flex items-center justify-between mb-8">
+                <div class="flex justify-between items-center mb-8">
 
                     <div>
 
-                        <h2 class="text-2xl font-bold mb-2">
-                            👥 Contribuintes ativos
+                        <h2 class="text-2xl font-black">
+                            👥 Contribuintes Ativos
                         </h2>
 
-                        <p class="text-zinc-500">
-                            Controle de entregas e produtividade dos contribuintes.
+                        <p class="text-zinc-500 mt-2">
+                            Controle de entregas e produtividade.
                         </p>
 
                     </div>
 
-                    <button type="button" id="add-contribuinte" class="add-button">
-                        + Adicionar contribuinte
+                    <button
+                        type="button"
+                        id="add-contribuinte"
+                        class="add-button">
+
+                        + Adicionar Contribuinte
+
                     </button>
 
                 </div>
 
-                <div id="contribuintes-container" class="space-y-8"></div>
+                <div
+                    id="contribuintes-container"
+                    class="space-y-8">
+                </div>
 
             </section>
 
             <!-- MÉTRICAS -->
-            <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <section class="grid md:grid-cols-3 gap-6">
 
                 <div class="metric-card">
 
                     <p class="metric-title">
-                        Compras realizadas
+                        Compras
                     </p>
 
                     <h3 id="metrica-compras" class="metric-value">
@@ -166,7 +274,7 @@
                 <div class="metric-card">
 
                     <p class="metric-title">
-                        Serviços entregues
+                        Serviços
                     </p>
 
                     <h3 id="metrica-servicos" class="metric-value">
@@ -178,7 +286,7 @@
                 <div class="metric-card">
 
                     <p class="metric-title">
-                        Contribuintes ativos
+                        Contribuintes
                     </p>
 
                     <h3 id="metrica-contribuintes" class="metric-value">
@@ -189,92 +297,109 @@
 
             </section>
 
-            <!-- OBRAS EXTRAS -->
-            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+            <!-- OBRAS -->
+            <section
+                class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-                <div class="mb-6">
+                <h2 class="text-2xl font-black mb-4">
+                    💰 Obras Extras
+                </h2>
 
-                    <h2 class="text-2xl font-bold mb-2">
-                        💰 Obras extras
-                    </h2>
-
-                    <p class="text-zinc-500">
-                        Informe se os pagamentos foram realizados corretamente.
-                    </p>
-
-                </div>
-
-                <textarea id="obras-extras" class="textarea"
-                    placeholder="Descreva pagamentos pendentes, atrasos ou confirmações..."></textarea>
+                <textarea
+                    id="obras-extras"
+                    class="textarea"
+                    placeholder="Descreva pagamentos, atrasos ou pendências..."></textarea>
 
             </section>
 
             <!-- FALTAS -->
-            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
+            <section
+                class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
 
-                <div class="flex items-center justify-between mb-8">
+                <div class="flex justify-between items-center mb-8">
 
                     <div>
 
-                        <h2 class="text-2xl font-bold mb-2">
-                            ⚠️ Faltas cometidas
+                        <h2 class="text-2xl font-black">
+                            ⚠️ Faltas e Advertências
                         </h2>
 
-                        <p class="text-zinc-500">
-                            Registre ocorrências e advertências.
+                        <p class="text-zinc-500 mt-2">
+                            Registro disciplinar do período.
                         </p>
 
                     </div>
 
-                    <button type="button" id="add-falta" class="add-button">
-                        + Adicionar falta
+                    <button
+                        type="button"
+                        id="add-falta"
+                        class="add-button">
+
+                        + Adicionar Falta
+
                     </button>
 
                 </div>
 
-                <div id="faltas-container" class="space-y-6"></div>
-
-            </section>
-
-            <!-- OBSERVAÇÕES -->
-            <section class="glass section-border rounded-[2rem] p-8 border border-zinc-800">
-
-                <div class="mb-6">
-
-                    <h2 class="text-2xl font-bold mb-2">
-                        📝 Observações finais
-                    </h2>
-
-                    <p class="text-zinc-500">
-                        Informações complementares do relatório.
-                    </p>
-
+                <div
+                    id="faltas-container"
+                    class="space-y-6">
                 </div>
 
-                <textarea id="observacoes" class="textarea" placeholder="Digite observações adicionais..."></textarea>
+            </section>
+
+            <!-- OBS -->
+            <section
+                class="card-glow rounded-[2rem] border border-zinc-800 bg-zinc-900/40 backdrop-blur-xl p-8">
+
+                <h2 class="text-2xl font-black mb-4">
+                    📝 Observações Finais
+                </h2>
+
+                <textarea
+                    id="observacoes"
+                    class="textarea"
+                    placeholder="Digite observações adicionais..."></textarea>
 
             </section>
 
-            <!-- ACTIONS -->
-            <section class="flex flex-col md:flex-row gap-4 justify-end">
+            <!-- AÇÕES -->
+            <section class="flex flex-col md:flex-row justify-end gap-4">
 
-                <button type="button" class="secondary-button">
-                    Salvar rascunho
+                <button
+                    type="button"
+                    class="secondary-button">
+
+                    💾 Salvar Rascunho
+
                 </button>
 
-                <button type="button" id="gerar-pdf" class="primary-button">
-                    📄 Gerar relatório PDF
+                <button
+                    type="button"
+                    id="gerar-pdf"
+                    class="px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-600 to-yellow-500 font-bold shadow-lg hover:scale-105 transition">
+
+                    📄 Gerar Relatório PDF
+
                 </button>
 
             </section>
 
         </form>
 
+        <footer class="mt-20 border-t border-zinc-800 pt-8 text-center">
+
+            <h3 class="font-bold text-amber-400">
+                Sangue Carmesim
+            </h3>
+
+            <p class="text-zinc-500 mt-2">
+                Comitê de Compras & Vendas • Sistema Operacional Interno
+            </p>
+
+        </footer>
+
     </main>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <script src="../js/compras.js"></script>
 
 </body>
 
