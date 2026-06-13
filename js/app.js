@@ -306,99 +306,11 @@ function createFaltaCard() {
 }
 
 /* =========================================================
-   📊 DATA
-========================================================= */
-
-function getField(
-  card,
-  field
-) {
-  return (
-    card.querySelector(
-      `[data-field="${field}"]`
-    )?.value || "-"
-  );
-}
-
-function coletarSemanas() {
-  return DOM.semanas.map(
-    (semana) =>
-      [
-        ...semana.querySelectorAll(
-          ".adm-card"
-        ),
-      ].map((card) => ({
-        adm: getField(
-          card,
-          "adm"
-        ),
-
-        contribuicao:
-          getField(
-            card,
-            "contribuicao"
-          ),
-
-        prazo: getField(
-          card,
-          "prazo"
-        ),
-      }))
-  );
-}
-
-function coletarFaltas() {
-  return [
-    ...DOM.faltasContainer.querySelectorAll(
-      ".adm-card"
-    ),
-  ].map((card) => ({
-    adm: getField(
-      card,
-      "adm"
-    ),
-
-    ocorrido: getField(
-      card,
-      "ocorrido"
-    ),
-
-    quantidade:
-      getField(
-        card,
-        "quantidade"
-      ),
-
-    advertencia:
-      getField(
-        card,
-        "advertencia"
-      ),
-  }));
-}
-
-/* =========================================================
    📄 PDF
 ========================================================= */
 
 async function handleGerarPDF() {
-  const dados = {
-    mes: DOM.mes.value,
-
-    ano: DOM.ano.value,
-
-    meta: DOM.meta.value,
-
-    observacoes:
-      DOM.observacoes.value,
-
-    semanas: coletarSemanas(),
-
-    faltas: coletarFaltas(),
-  };
-
-  const button =
-    DOM.gerarPDFButton;
+  const button = DOM.gerarPDFButton;
 
   const originalText =
     button.innerHTML;
@@ -407,14 +319,20 @@ async function handleGerarPDF() {
     button.disabled = true;
 
     button.innerHTML =
-      "Gerando PDF...";
+      "📄 Gerando PDF...";
 
     await gerarPDF({
+      elemento: document.querySelector("main"),
+
       filename:
         CONFIG.PDF_FILENAME,
-
-      dados,
     });
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "Erro ao gerar PDF."
+    );
   } finally {
     button.disabled = false;
 
