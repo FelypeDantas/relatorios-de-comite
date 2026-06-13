@@ -14,17 +14,17 @@ const $ = (selector) =>
 const $$ = (selector) =>
   [...document.querySelectorAll(selector)];
 
-const createElement = (
+function createElement(
   tag,
   className = ""
-) => {
+) {
   const element =
     document.createElement(tag);
 
   element.className = className;
 
   return element;
-};
+}
 
 /* =========================================================
    ⚙️ CONFIG
@@ -56,14 +56,8 @@ const DOM = {
   gerarPDFButton:
     $("#gerar-pdf"),
 
-  mes: $("#mes"),
-
-  ano: $("#ano"),
-
-  meta: $("#meta"),
-
-  observacoes:
-    $("#observacoes"),
+  main:
+    document.querySelector("main"),
 };
 
 /* =========================================================
@@ -75,7 +69,7 @@ const CLASSES = {
     "w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3 text-white",
 
   card:
-    "adm-card bg-zinc-950/70 border border-zinc-800 rounded-3xl p-6 space-y-6",
+    "adm-card bg-zinc-950/70 border border-zinc-800 rounded-3xl p-6 space-y-6 animate-fade",
 
   removeButton:
     "w-full py-3 rounded-2xl bg-red-950/40 hover:bg-red-900/50 border border-red-800/40 text-red-300 transition-all",
@@ -142,13 +136,16 @@ function createField(
   label.textContent =
     labelText;
 
-  wrapper.append(label, input);
+  wrapper.append(
+    label,
+    input
+  );
 
   return wrapper;
 }
 
 function createRemoveButton(
-  element
+  target
 ) {
   const button =
     createElement(
@@ -158,20 +155,20 @@ function createRemoveButton(
 
   button.type = "button";
 
-  button.textContent =
-    "Remover";
+  button.innerHTML =
+    "🗑️ Remover";
 
   button.addEventListener(
     "click",
-    () => element.remove()
+    () => target.remove()
   );
 
   return button;
 }
 
 function createCard({
-  columns = 3,
-  fields = [],
+  columns,
+  fields,
 }) {
   const card =
     createElement(
@@ -206,10 +203,8 @@ function createADMCard() {
     fields: [
       createField(
         "ADM",
-
         createInput({
           field: "adm",
-
           placeholder:
             "Nome do ADM",
         })
@@ -217,11 +212,9 @@ function createADMCard() {
 
       createField(
         "Contribuição",
-
         createInput({
           field:
             "contribuicao",
-
           placeholder:
             "Ex: 15 atendimentos",
         })
@@ -229,7 +222,6 @@ function createADMCard() {
 
       createField(
         "Prazo cumprido?",
-
         createSelect({
           field: "prazo",
 
@@ -255,10 +247,8 @@ function createFaltaCard() {
     fields: [
       createField(
         "ADM",
-
         createInput({
           field: "adm",
-
           placeholder:
             "Nome do ADM",
         })
@@ -266,10 +256,8 @@ function createFaltaCard() {
 
       createField(
         "Ocorrido",
-
         createInput({
           field: "ocorrido",
-
           placeholder:
             "Descrição",
         })
@@ -277,9 +265,9 @@ function createFaltaCard() {
 
       createField(
         "Quantidade",
-
         createInput({
-          field: "quantidade",
+          field:
+            "quantidade",
 
           type: "number",
 
@@ -289,7 +277,6 @@ function createFaltaCard() {
 
       createField(
         "Advertência?",
-
         createSelect({
           field:
             "advertencia",
@@ -310,7 +297,8 @@ function createFaltaCard() {
 ========================================================= */
 
 async function handleGerarPDF() {
-  const button = DOM.gerarPDFButton;
+  const button =
+    DOM.gerarPDFButton;
 
   const originalText =
     button.innerHTML;
@@ -322,7 +310,8 @@ async function handleGerarPDF() {
       "📄 Gerando PDF...";
 
     await gerarPDF({
-      elemento: document.querySelector("main"),
+      elemento:
+        DOM.main,
 
       filename:
         CONFIG.PDF_FILENAME,
@@ -342,7 +331,7 @@ async function handleGerarPDF() {
 }
 
 /* =========================================================
-   🚀 EVENTS
+   🚀 EVENTOS
 ========================================================= */
 
 function adicionarADM(
@@ -358,7 +347,7 @@ function adicionarADM(
     CONFIG.MAX_ADMS
   ) {
     alert(
-      "Limite máximo atingido."
+      "Limite máximo de ADMs atingido."
     );
 
     return;
@@ -369,50 +358,57 @@ function adicionarADM(
   );
 }
 
-DOM.addADMButtons.forEach(
-  (button) => {
-    button.addEventListener(
-      "click",
-      () =>
-        adicionarADM(
-          button.dataset
-            .addAdm
-        )
-    );
-  }
-);
+function registrarEventos() {
+  DOM.addADMButtons.forEach(
+    (button) => {
+      button.addEventListener(
+        "click",
+        () =>
+          adicionarADM(
+            button.dataset
+              .addAdm
+          )
+      );
+    }
+  );
 
-DOM.addFaltaButton?.addEventListener(
-  "click",
-  () => {
-    DOM.faltasContainer.appendChild(
-      createFaltaCard()
-    );
-  }
-);
+  DOM.addFaltaButton?.addEventListener(
+    "click",
+    () => {
+      DOM.faltasContainer.appendChild(
+        createFaltaCard()
+      );
+    }
+  );
 
-DOM.gerarPDFButton?.addEventListener(
-  "click",
-  handleGerarPDF
-);
+  DOM.gerarPDFButton?.addEventListener(
+    "click",
+    handleGerarPDF
+  );
+}
 
 /* =========================================================
    ⚡ INIT
 ========================================================= */
 
-DOM.semanas.forEach(
-  (semana) => {
-    semana.appendChild(
-      createADMCard()
-    );
-  }
-);
+function init() {
+  DOM.semanas.forEach(
+    (semana) =>
+      semana.appendChild(
+        createADMCard()
+      )
+  );
 
-DOM.faltasContainer?.appendChild(
-  createFaltaCard()
-);
+  DOM.faltasContainer?.appendChild(
+    createFaltaCard()
+  );
 
-console.log(
-  "%c🩸 Sistema Carmesim iniciado.",
-  "color: crimson; font-size:14px; font-weight:bold;"
-);
+  registrarEventos();
+
+  console.log(
+    "%c🩸 Sistema Carmesim iniciado.",
+    "color: crimson;font-size:14px;font-weight:bold;"
+  );
+}
+
+init();
