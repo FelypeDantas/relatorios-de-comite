@@ -310,12 +310,9 @@ async function handleGerarPDF() {
       "📄 Gerando PDF...";
 
     await gerarPDF({
-      elemento:
-        DOM.main,
-
-      filename:
-        CONFIG.PDF_FILENAME,
-    });
+        filename:
+          CONFIG.PDF_FILENAME,
+      });
   } catch (error) {
     console.error(error);
 
