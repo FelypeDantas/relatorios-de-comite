@@ -2,7 +2,7 @@
    🩸 SANGUE CARMESIM • ATENDIMENTO
 ========================================================= */
 
-import { gerarPDF } from "./pdf.js";
+import { gerarPDF } from "./pdf/pdf-atendimento.js";
 
 /* =========================================================
    ⚙️ HELPERS
