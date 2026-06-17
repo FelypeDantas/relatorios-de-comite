@@ -39,7 +39,7 @@ export async function gerarPDF({
       ?.value || "-";
 
   escrever(
-    "RELATÓRIO DE ATENDIMENTO",
+    "Relatório mensal – Comitê de Atendimento ",
     18,
     12
   );
