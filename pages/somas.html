@@ -90,7 +90,7 @@
                         Relatórios
                     </p>
             
-                    <h3 class="metric-value">
+                    <h3 id="metrica-total" class="metric-value" >
                         0
                     </h3>
                 </div>
@@ -100,7 +100,7 @@
                         ADMs Avaliados
                     </p>
             
-                    <h3 class="metric-value">
+                    <h3 id="metrica-adms" class="metric-value">
                         0
                     </h3>
                 </div>
@@ -110,7 +110,7 @@
                         Membros Avaliados
                     </p>
             
-                    <h3 class="metric-value">
+                    <h3 id="metrica-membros" class="metric-value">
                         0
                     </h3>
                 </div>
@@ -120,7 +120,7 @@
                         Produtividade
                     </p>
             
-                    <h3 class="metric-value">
+                    <h3 id="metrica-produtividade" class="metric-value">
                         100%
                     </h3>
                 </div>
@@ -212,7 +212,7 @@
                                     Relatórios sobre ADMs aleatórios
                                 </label>
 
-                                <input id="s1-aleatorios" type="number" class="input" placeholder="0" />
+                                <input id="s1-aleatorios" type="number" data-total  class="input" placeholder="0" />
 
                             </div>
 
@@ -222,7 +222,7 @@
                                     Relatórios sobre ADMs FIXO
                                 </label>
 
-                                <input id="s1-fixos" type="number" class="input" placeholder="0" />
+                                <input id="s1-fixos" type="number" data-total class="input" placeholder="0" />
 
                             </div>
 
@@ -232,7 +232,7 @@
                                     Relatórios sobre membros comuns
                                 </label>
 
-                                <input id="s1-comuns" type="number" class="input" placeholder="0" />
+                                <input id="s1-comuns" type="number" data-total class="input" placeholder="0" />
 
                             </div>
 
@@ -264,7 +264,7 @@
                                     Relatórios sobre ADMs aleatórios
                                 </label>
 
-                                <input id="s2-aleatorios" type="number" class="input" placeholder="0" />
+                                <input id="s2-aleatorios" type="number" data-total class="input" placeholder="0" />
 
                             </div>
 
@@ -274,7 +274,7 @@
                                     Relatórios sobre ADMs FIXO
                                 </label>
 
-                                <input id="s2-fixos" type="number" class="input" placeholder="0" />
+                                <input id="s2-fixos" type="number" data-total class="input" placeholder="0" />
 
                             </div>
 
@@ -284,7 +284,7 @@
                                     Relatórios sobre membros comuns
                                 </label>
 
-                                <input id="s2-comuns" type="number" class="input" placeholder="0" />
+                                <input id="s2-comuns" type="number" data-total class="input" placeholder="0" />
 
                             </div>
 
@@ -316,7 +316,7 @@
                                     Relatórios sobre ADMs aleatórios
                                 </label>
 
-                                <input id="s3-aleatorios" type="number" class="input" placeholder="0" />
+                                <input id="s3-aleatorios" type="number" data-total  class="input" placeholder="0" />
 
                             </div>
 
@@ -326,7 +326,7 @@
                                     Relatórios sobre ADMs FIXO
                                 </label>
 
-                                <input id="s3-fixos" type="number" class="input" placeholder="0" />
+                                <input id="s3-fixos" type="number" data-total  class="input" placeholder="0" />
 
                             </div>
 
@@ -336,7 +336,7 @@
                                     Relatórios sobre membros comuns
                                 </label>
 
-                                <input id="s3-comuns" type="number" class="input" placeholder="0" />
+                                <input id="s3-comuns" type="number" data-total class="input" placeholder="0" />
 
                             </div>
 
@@ -470,13 +470,13 @@
 
                     </div>
 
-                    <button type="button" class="add-button">
+                    <button id="add-falta" type="button" class="add-button">
                         + Adicionar falta
                     </button>
 
                 </div>
 
-                <div class="space-y-6">
+                <div id="faltas-wrapper" class="space-y-6">
 
                     <div class="metric-card">
 
