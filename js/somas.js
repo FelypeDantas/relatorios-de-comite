@@ -227,36 +227,35 @@ function atualizarCards() {
   const totalRelatoriosCard =
     document.querySelector("#metrica-total");
 
-  const totalAleatoriosCard =
-    document.querySelector("#metrica-aleatorios");
+  const totalAdmsCard =
+    document.querySelector("#metrica-adms");
 
-  const totalFixosCard =
-    document.querySelector("#metrica-fixos");
+  const totalMembrosCard =
+    document.querySelector("#metrica-membros");
 
-  const totalComunsCard =
-    document.querySelector("#metrica-comuns");
+  const produtividadeCard =
+    document.querySelector("#metrica-produtividade");
 
   if (totalRelatoriosCard) {
     totalRelatoriosCard.textContent =
       metricas.totalRelatorios;
   }
 
-  if (totalAleatoriosCard) {
-    totalAleatoriosCard.textContent =
+  if (totalAdmsCard) {
+    totalAdmsCard.textContent =
       metricas.totalAleatorios;
   }
 
-  if (totalFixosCard) {
-    totalFixosCard.textContent =
-      metricas.totalFixos;
-  }
-
-  if (totalComunsCard) {
-    totalComunsCard.textContent =
+  if (totalMembrosCard) {
+    totalMembrosCard.textContent =
       metricas.totalComuns;
   }
-}
 
+  if (produtividadeCard) {
+    produtividadeCard.textContent =
+      `${metricas.totalFixos}%`;
+  }
+}
 
 function createMembroCard() {
   const card = document.createElement("div");
