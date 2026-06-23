@@ -1,3 +1,5 @@
+import { gerarPDF } from "./pdf/pdf-somas.js";
+
 /* =========================================================
    🧮 SANGUE CARMESIM • COMITÊ DE SOMAS
 ========================================================= */
@@ -255,46 +257,6 @@ function atualizarCards() {
   }
 }
 
-/* =========================================================
-   📥 COLETA
-========================================================= */
-
-function coletarDados() {
-  const faltas = [];
-
-  document
-    .querySelectorAll(".metric-card")
-    .forEach((card) => {
-      const inputs =
-        card.querySelectorAll("input, select");
-
-      if (inputs.length === 4) {
-        faltas.push({
-          membro: inputs[0].value,
-          ocorrido: inputs[1].value,
-          quantidade: inputs[2].value,
-          advertencia: inputs[3].value,
-        });
-      }
-    });
-
-  return {
-    mes:
-      document.querySelector("#mes")?.value || "",
-
-    total:
-      document.querySelector("#total-geral")
-        ?.value || 0,
-
-    observacoes:
-      document.querySelector("#observacoes")
-        ?.value || "",
-
-    metricas,
-
-    faltas,
-  };
-}
 
 function createMembroCard() {
   const card = document.createElement("div");
@@ -350,182 +312,33 @@ function createMembroCard() {
   return card;
 }
 
-/* =========================================================
-   📄 PDF
-========================================================= */
+gerarPDFButton?.addEventListener(
+  "click",
+  async () => {
+    try {
+      gerarPDFButton.disabled = true;
 
-function gerarRelatorioHTML() {
-  const dados = coletarDados();
+      gerarPDFButton.innerHTML =
+        "📄 Gerando PDF...";
 
-  return `
-    <div
-      style="
-        padding: 50px;
-        font-family: Arial;
-        color: #111;
-      "
-    >
+      await gerarPDF({
+        filename:
+          "relatorio-comite-somas.pdf",
+      });
+    } catch (error) {
+      console.error(error);
 
-      <h1
-        style="
-          font-size: 34px;
-          margin-bottom: 8px;
-        "
-      >
-        Relatório Mensal
-      </h1>
+      alert(
+        "Erro ao gerar relatório."
+      );
+    } finally {
+      gerarPDFButton.disabled = false;
 
-      <p
-        style="
-          color: #555;
-          margin-bottom: 30px;
-        "
-      >
-        Comitê de Somas • Sangue Carmesim
-      </p>
-
-      <hr />
-
-      <h2 style="margin-top: 30px;">
-        Dados gerais
-      </h2>
-
-      <ul>
-        <li>
-          <strong>Mês:</strong>
-          ${dados.mes}
-        </li>
-
-        <li>
-          <strong>Total geral:</strong>
-          ${dados.total}
-        </li>
-      </ul>
-
-      <h2 style="margin-top: 30px;">
-        Métricas
-      </h2>
-
-      <ul>
-        <li>
-          Relatórios aleatórios:
-          ${dados.metricas.totalAleatorios}
-        </li>
-
-        <li>
-          Relatórios FIXO:
-          ${dados.metricas.totalFixos}
-        </li>
-
-        <li>
-          Relatórios comuns:
-          ${dados.metricas.totalComuns}
-        </li>
-
-        <li>
-          Total processado:
-          ${dados.metricas.totalRelatorios}
-        </li>
-      </ul>
-
-      <h2 style="margin-top: 30px;">
-        Faltas registradas
-      </h2>
-
-      ${
-        dados.faltas.length === 0
-          ? "<p>Nenhuma falta registrada.</p>"
-          : dados.faltas
-              .map(
-                (falta) => `
-            <div
-              style="
-                margin-bottom: 20px;
-                padding: 15px;
-                border: 1px solid #ddd;
-                border-radius: 12px;
-              "
-            >
-              <p>
-                <strong>Membro:</strong>
-                ${falta.membro}
-              </p>
-
-              <p>
-                <strong>Ocorrido:</strong>
-                ${falta.ocorrido}
-              </p>
-
-              <p>
-                <strong>Quantidade:</strong>
-                ${falta.quantidade}
-              </p>
-
-              <p>
-                <strong>Advertência:</strong>
-                ${falta.advertencia}
-              </p>
-            </div>
-          `
-              )
-              .join("")
-      }
-
-      <h2 style="margin-top: 30px;">
-        Observações finais
-      </h2>
-
-      <p>
-        ${
-          dados.observacoes ||
-          "Nenhuma observação registrada."
-        }
-      </p>
-
-    </div>
-  `;
-}
-
-async function gerarPDF() {
-  if (typeof html2pdf === "undefined") {
-    alert(
-      "Biblioteca html2pdf não encontrada."
-    );
-
-    return;
+      gerarPDFButton.innerHTML =
+        "📄 Gerar relatório PDF";
+    }
   }
-
-  const container = document.createElement("div");
-
-  container.innerHTML = gerarRelatorioHTML();
-
-  const options = {
-    margin: 0.5,
-
-    filename:
-      "relatorio-comite-somas.pdf",
-
-    image: {
-      type: "jpeg",
-      quality: 1,
-    },
-
-    html2canvas: {
-      scale: 2,
-    },
-
-    jsPDF: {
-      unit: "in",
-      format: "a4",
-      orientation: "portrait",
-    },
-  };
-
-  await html2pdf()
-    .set(options)
-    .from(container)
-    .save();
-}
+);
 
 /* =========================================================
    🚀 EVENTS
@@ -547,33 +360,6 @@ document
       atualizarMetricas
     );
   });
-
-gerarPDFButton?.addEventListener(
-  "click",
-  async () => {
-    try {
-      gerarPDFButton.disabled = true;
-
-      gerarPDFButton.innerHTML =
-        "Gerando PDF...";
-
-      atualizarMetricas();
-
-      await gerarPDF();
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        "Erro ao gerar relatório."
-      );
-    } finally {
-      gerarPDFButton.disabled = false;
-
-      gerarPDFButton.innerHTML =
-        "📄 Gerar relatório PDF";
-    }
-  }
-);
 
 /* =========================================================
    ⚡ INIT
