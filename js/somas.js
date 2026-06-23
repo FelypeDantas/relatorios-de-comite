@@ -4,24 +4,17 @@ import { gerarPDF } from "./pdf/pdf-somas.js";
    🧮 SANGUE CARMESIM • COMITÊ DE SOMAS
 ========================================================= */
 
-const gerarPDFButton = document.querySelector("#gerar-pdf");
+const gerarPDFButton =
+  document.querySelector("#gerar-pdf");
 
-const faltasWrapper = document.querySelector("#faltas-wrapper");
-
-const totalInputs = document.querySelectorAll("[data-total]");
+const faltasWrapper =
+  document.querySelector("#faltas-wrapper");
 
 const membrosContainer =
-  document.querySelector(
-    "#membros-container"
-  );
+  document.querySelector("#membros-container");
 
-document
-  .querySelector("#add-membro")
-  ?.addEventListener("click", () => {
-    membrosContainer?.appendChild(
-      createMembroCard()
-    );
-  });
+const totalInputs =
+  document.querySelectorAll("[data-total]");
 
 const metricas = {
   totalRelatorios: 0,
@@ -38,6 +31,10 @@ function formatNumber(value) {
   return Number(value || 0);
 }
 
+function getValue(selector) {
+  return document.querySelector(selector)?.value || "";
+}
+
 function createInput({
   type = "text",
   placeholder = "",
@@ -46,7 +43,6 @@ function createInput({
 
   input.type = type;
   input.placeholder = placeholder;
-
   input.className = "input";
 
   return input;
@@ -58,7 +54,8 @@ function createSelect(options = []) {
   select.className = "select";
 
   options.forEach((item) => {
-    const option = document.createElement("option");
+    const option =
+      document.createElement("option");
 
     option.value = item;
     option.textContent = item;
@@ -79,24 +76,31 @@ function createLabel(text) {
 }
 
 function createField({ label, input }) {
-  const wrapper = document.createElement("div");
+  const wrapper =
+    document.createElement("div");
 
-  wrapper.appendChild(createLabel(label));
+  wrapper.appendChild(
+    createLabel(label)
+  );
+
   wrapper.appendChild(input);
 
   return wrapper;
 }
 
 /* =========================================================
-   ⚠️ FALTA CARD
+   ⚠️ FALTAS
 ========================================================= */
 
 function createFaltaCard() {
-  const card = document.createElement("div");
+  const card =
+    document.createElement("div");
 
-  card.className = "metric-card animate-fade";
+  card.className =
+    "metric-card animate-fade";
 
-  const grid = document.createElement("div");
+  const grid =
+    document.createElement("div");
 
   grid.className =
     "grid grid-cols-1 lg:grid-cols-4 gap-6";
@@ -111,7 +115,8 @@ function createFaltaCard() {
   const ocorridoField = createField({
     label: "O que aconteceu?",
     input: createInput({
-      placeholder: "Descrição da ocorrência",
+      placeholder:
+        "Descrição da ocorrência",
     }),
   });
 
@@ -132,27 +137,30 @@ function createFaltaCard() {
     ]),
   });
 
-  grid.appendChild(membroField);
-  grid.appendChild(ocorridoField);
-  grid.appendChild(quantidadeField);
-  grid.appendChild(advertenciaField);
+  grid.append(
+    membroField,
+    ocorridoField,
+    quantidadeField,
+    advertenciaField
+  );
 
   card.appendChild(grid);
 
-  const removeButton = document.createElement("button");
+  const removeButton =
+    document.createElement("button");
 
   removeButton.type = "button";
 
   removeButton.className =
     "mt-6 w-full bg-red-950/30 hover:bg-red-900/40 border border-red-800/40 text-red-300 py-3 rounded-2xl transition-all";
 
-  removeButton.textContent = "Remover falta";
+  removeButton.textContent =
+    "Remover falta";
 
-  removeButton.addEventListener("click", () => {
-    card.remove();
-
-    atualizarMetricas();
-  });
+  removeButton.addEventListener(
+    "click",
+    () => card.remove()
+  );
 
   card.appendChild(removeButton);
 
@@ -160,110 +168,18 @@ function createFaltaCard() {
 }
 
 /* =========================================================
-   📊 MÉTRICAS
+   👥 MEMBROS
 ========================================================= */
 
-function atualizarMetricas() {
-  const semana1 = {
-    aleatorios: formatNumber(
-      document.querySelector("#s1-aleatorios")?.value
-    ),
-    fixos: formatNumber(
-      document.querySelector("#s1-fixos")?.value
-    ),
-    comuns: formatNumber(
-      document.querySelector("#s1-comuns")?.value
-    ),
-  };
-
-  const semana2 = {
-    aleatorios: formatNumber(
-      document.querySelector("#s2-aleatorios")?.value
-    ),
-    fixos: formatNumber(
-      document.querySelector("#s2-fixos")?.value
-    ),
-    comuns: formatNumber(
-      document.querySelector("#s2-comuns")?.value
-    ),
-  };
-
-  const semana3 = {
-    aleatorios: formatNumber(
-      document.querySelector("#s3-aleatorios")?.value
-    ),
-    fixos: formatNumber(
-      document.querySelector("#s3-fixos")?.value
-    ),
-    comuns: formatNumber(
-      document.querySelector("#s3-comuns")?.value
-    ),
-  };
-
-  metricas.totalAleatorios =
-    semana1.aleatorios +
-    semana2.aleatorios +
-    semana3.aleatorios;
-
-  metricas.totalFixos =
-    semana1.fixos +
-    semana2.fixos +
-    semana3.fixos;
-
-  metricas.totalComuns =
-    semana1.comuns +
-    semana2.comuns +
-    semana3.comuns;
-
-  metricas.totalRelatorios =
-    metricas.totalAleatorios +
-    metricas.totalFixos +
-    metricas.totalComuns;
-
-  atualizarCards();
-}
-
-function atualizarCards() {
-  const totalRelatoriosCard =
-    document.querySelector("#metrica-total");
-
-  const totalAdmsCard =
-    document.querySelector("#metrica-adms");
-
-  const totalMembrosCard =
-    document.querySelector("#metrica-membros");
-
-  const produtividadeCard =
-    document.querySelector("#metrica-produtividade");
-
-  if (totalRelatoriosCard) {
-    totalRelatoriosCard.textContent =
-      metricas.totalRelatorios;
-  }
-
-  if (totalAdmsCard) {
-    totalAdmsCard.textContent =
-      metricas.totalAleatorios;
-  }
-
-  if (totalMembrosCard) {
-    totalMembrosCard.textContent =
-      metricas.totalComuns;
-  }
-
-  if (produtividadeCard) {
-    produtividadeCard.textContent =
-      `${metricas.totalFixos}%`;
-  }
-}
-
 function createMembroCard() {
-  const card = document.createElement("div");
+  const card =
+    document.createElement("div");
 
   card.className =
     "metric-card animate-fade";
 
-  const grid = document.createElement("div");
+  const grid =
+    document.createElement("div");
 
   grid.className =
     "grid grid-cols-1 lg:grid-cols-2 gap-6";
@@ -275,16 +191,19 @@ function createMembroCard() {
     }),
   });
 
-  const quantidadeField = createField({
-    label: "Quantidade calculada",
-    input: createInput({
-      type: "number",
-      placeholder: "0",
-    }),
-  });
+  const quantidadeField =
+    createField({
+      label: "Quantidade calculada",
+      input: createInput({
+        type: "number",
+        placeholder: "0",
+      }),
+    });
 
-  grid.appendChild(nomeField);
-  grid.appendChild(quantidadeField);
+  grid.append(
+    nomeField,
+    quantidadeField
+  );
 
   card.appendChild(grid);
 
@@ -301,9 +220,7 @@ function createMembroCard() {
 
   removeButton.addEventListener(
     "click",
-    () => {
-      card.remove();
-    }
+    () => card.remove()
   );
 
   card.appendChild(removeButton);
@@ -311,18 +228,221 @@ function createMembroCard() {
   return card;
 }
 
+/* =========================================================
+   📊 MÉTRICAS
+========================================================= */
+
+function atualizarMetricas() {
+  const semanas = [
+    {
+      aleatorios: formatNumber(
+        getValue("#s1-aleatorios")
+      ),
+      fixos: formatNumber(
+        getValue("#s1-fixos")
+      ),
+      comuns: formatNumber(
+        getValue("#s1-comuns")
+      ),
+    },
+    {
+      aleatorios: formatNumber(
+        getValue("#s2-aleatorios")
+      ),
+      fixos: formatNumber(
+        getValue("#s2-fixos")
+      ),
+      comuns: formatNumber(
+        getValue("#s2-comuns")
+      ),
+    },
+    {
+      aleatorios: formatNumber(
+        getValue("#s3-aleatorios")
+      ),
+      fixos: formatNumber(
+        getValue("#s3-fixos")
+      ),
+      comuns: formatNumber(
+        getValue("#s3-comuns")
+      ),
+    },
+  ];
+
+  metricas.totalAleatorios =
+    semanas.reduce(
+      (acc, s) =>
+        acc + s.aleatorios,
+      0
+    );
+
+  metricas.totalFixos =
+    semanas.reduce(
+      (acc, s) =>
+        acc + s.fixos,
+      0
+    );
+
+  metricas.totalComuns =
+    semanas.reduce(
+      (acc, s) =>
+        acc + s.comuns,
+      0
+    );
+
+  metricas.totalRelatorios =
+    metricas.totalAleatorios +
+    metricas.totalFixos +
+    metricas.totalComuns;
+
+  atualizarCards();
+}
+
+function atualizarCards() {
+  const total =
+    document.querySelector(
+      "#metrica-total"
+    );
+
+  const adms =
+    document.querySelector(
+      "#metrica-adms"
+    );
+
+  const membros =
+    document.querySelector(
+      "#metrica-membros"
+    );
+
+  const produtividade =
+    document.querySelector(
+      "#metrica-produtividade"
+    );
+
+  if (total)
+    total.textContent =
+      metricas.totalRelatorios;
+
+  if (adms)
+    adms.textContent =
+      metricas.totalAleatorios;
+
+  if (membros)
+    membros.textContent =
+      metricas.totalComuns;
+
+  if (produtividade) {
+    produtividade.textContent =
+      metricas.totalRelatorios > 0
+        ? "100%"
+        : "0%";
+  }
+}
+
+/* =========================================================
+   📥 COLETA DE DADOS
+========================================================= */
+
+function coletarDados() {
+  const faltas = [];
+
+  document
+    .querySelectorAll(
+      "#faltas-wrapper .metric-card"
+    )
+    .forEach((card) => {
+      const inputs =
+        card.querySelectorAll(
+          "input, select"
+        );
+
+      if (inputs.length >= 4) {
+        faltas.push({
+          membro: inputs[0].value,
+          ocorrido: inputs[1].value,
+          quantidade:
+            inputs[2].value,
+          advertencia:
+            inputs[3].value,
+        });
+      }
+    });
+
+  const membros = [];
+
+  document
+    .querySelectorAll(
+      "#membros-container .metric-card"
+    )
+    .forEach((card) => {
+      const inputs =
+        card.querySelectorAll(
+          "input"
+        );
+
+      if (inputs.length >= 2) {
+        membros.push({
+          nome: inputs[0].value,
+          quantidade:
+            inputs[1].value,
+        });
+      }
+    });
+
+  return {
+    mes: getValue("#mes"),
+
+    total: getValue(
+      "#total-geral"
+    ),
+
+    observacoes: getValue(
+      "#observacoes"
+    ),
+
+    topMembros: getValue(
+      "#top-membros"
+    ),
+
+    topAdms: getValue(
+      "#top-adms"
+    ),
+
+    destaques: getValue(
+      "#destaques-comite"
+    ),
+
+    metricas,
+
+    membros,
+
+    faltas,
+  };
+}
+
+/* =========================================================
+   📄 PDF
+========================================================= */
+
 gerarPDFButton?.addEventListener(
   "click",
   async () => {
     try {
-      gerarPDFButton.disabled = true;
+      gerarPDFButton.disabled =
+        true;
 
       gerarPDFButton.innerHTML =
         "📄 Gerando PDF...";
 
+      atualizarMetricas();
+
+      const dados =
+        coletarDados();
+
       await gerarPDF({
         filename:
           "relatorio-comite-somas.pdf",
+        dados,
       });
     } catch (error) {
       console.error(error);
@@ -331,7 +451,8 @@ gerarPDFButton?.addEventListener(
         "Erro ao gerar relatório."
       );
     } finally {
-      gerarPDFButton.disabled = false;
+      gerarPDFButton.disabled =
+        false;
 
       gerarPDFButton.innerHTML =
         "📄 Gerar relatório PDF";
@@ -344,6 +465,14 @@ gerarPDFButton?.addEventListener(
 ========================================================= */
 
 document
+  .querySelector("#add-membro")
+  ?.addEventListener("click", () => {
+    membrosContainer?.appendChild(
+      createMembroCard()
+    );
+  });
+
+document
   .querySelector("#add-falta")
   ?.addEventListener("click", () => {
     faltasWrapper?.appendChild(
@@ -351,14 +480,12 @@ document
     );
   });
 
-document
-  .querySelectorAll("[data-total]")
-  .forEach((input) => {
-    input.addEventListener(
-      "input",
-      atualizarMetricas
-    );
-  });
+totalInputs.forEach((input) => {
+  input.addEventListener(
+    "input",
+    atualizarMetricas
+  );
+});
 
 /* =========================================================
    ⚡ INIT
