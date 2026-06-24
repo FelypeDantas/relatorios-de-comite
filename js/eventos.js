@@ -1,21 +1,17 @@
+import { gerarPDF } from "./pdf/pdf-eventos.js";
+
 /* =========================================================
    🎭 SANGUE CARMESIM • COMITÊ DE EVENTOS
 ========================================================= */
 
 const eventosContainer =
-  document.querySelector(
-    "#eventos-container"
-  );
+  document.querySelector("#eventos-container");
 
 const faltasContainer =
-  document.querySelector(
-    "#faltas-container"
-  );
+  document.querySelector("#faltas-container");
 
 const gerarPDFButton =
-  document.querySelector(
-    "#gerar-pdf"
-  );
+  document.querySelector("#gerar-pdf");
 
 /* =========================================================
    📊 MÉTRICAS
@@ -39,10 +35,7 @@ function createInput({
     document.createElement("input");
 
   input.type = type;
-
-  input.placeholder =
-    placeholder;
-
+  input.placeholder = placeholder;
   input.className = "input";
 
   return input;
@@ -52,9 +45,7 @@ function createTextarea({
   placeholder = "",
 }) {
   const textarea =
-    document.createElement(
-      "textarea"
-    );
+    document.createElement("textarea");
 
   textarea.placeholder =
     placeholder;
@@ -67,21 +58,15 @@ function createTextarea({
 
 function createSelect(options = []) {
   const select =
-    document.createElement(
-      "select"
-    );
+    document.createElement("select");
 
-  select.className =
-    "select";
+  select.className = "select";
 
   options.forEach((item) => {
     const option =
-      document.createElement(
-        "option"
-      );
+      document.createElement("option");
 
     option.value = item;
-
     option.textContent = item;
 
     select.appendChild(option);
@@ -148,14 +133,15 @@ function createEventoCard() {
     },
     {
       label:
-        "Data programada",
+        "Data programada para início e término",
       placeholder:
-        "Ex: 10/05 às 19h",
+        "Ex: 10/05 19h até 11/05 21h",
     },
     {
-      label: "Data real",
+      label:
+        "Data real de início e término",
       placeholder:
-        "Ex: 10/05 às 20h",
+        "Ex: 10/05 20h até 11/05 22h",
     },
     {
       label: "Vencedor",
@@ -186,10 +172,10 @@ function createEventoCard() {
   const contribuintes =
     createField({
       label:
-        "Contribuintes ativos",
+        "Contribuintes ativos do evento",
       input: createTextarea({
         placeholder:
-          "Liste os contribuintes...",
+          "Separe os nomes por vírgula",
       }),
     });
 
@@ -220,9 +206,7 @@ function createEventoCard() {
   );
 
   const removeButton =
-    document.createElement(
-      "button"
-    );
+    document.createElement("button");
 
   removeButton.type =
     "button";
@@ -237,7 +221,6 @@ function createEventoCard() {
     "click",
     () => {
       card.remove();
-
       atualizarMetricas();
     }
   );
@@ -245,8 +228,6 @@ function createEventoCard() {
   card.appendChild(
     removeButton
   );
-
-  atualizarMetricas();
 
   return card;
 }
@@ -271,7 +252,7 @@ function createFaltaCard() {
   const membroField =
     createField({
       label:
-        "Membro em questão",
+        "🔖 Membro em questão",
       input: createInput({
         placeholder:
           "Nome do membro",
@@ -281,7 +262,7 @@ function createFaltaCard() {
   const ocorridoField =
     createField({
       label:
-        "O que aconteceu?",
+        "⁉️ O que aconteceu?",
       input: createInput({
         placeholder:
           "Descrição da ocorrência",
@@ -291,7 +272,7 @@ function createFaltaCard() {
   const quantidadeField =
     createField({
       label:
-        "N° de vezes",
+        "⚠️ Nº de vezes",
       input: createInput({
         type: "number",
         placeholder: "0",
@@ -301,7 +282,7 @@ function createFaltaCard() {
   const advertenciaField =
     createField({
       label:
-        "Aplicou advertência?",
+        "🛑 Aplicou advertência?",
       input: createSelect([
         "Selecione",
         "Sim",
@@ -309,28 +290,17 @@ function createFaltaCard() {
       ]),
     });
 
-  grid.appendChild(
-    membroField
-  );
-
-  grid.appendChild(
-    ocorridoField
-  );
-
-  grid.appendChild(
-    quantidadeField
-  );
-
-  grid.appendChild(
+  grid.append(
+    membroField,
+    ocorridoField,
+    quantidadeField,
     advertenciaField
   );
 
   card.appendChild(grid);
 
   const removeButton =
-    document.createElement(
-      "button"
-    );
+    document.createElement("button");
 
   removeButton.type =
     "button";
@@ -345,7 +315,6 @@ function createFaltaCard() {
     "click",
     () => {
       card.remove();
-
       atualizarMetricas();
     }
   );
@@ -353,8 +322,6 @@ function createFaltaCard() {
   card.appendChild(
     removeButton
   );
-
-  atualizarMetricas();
 
   return card;
 }
@@ -376,21 +343,21 @@ function atualizarMetricas() {
 
   document
     .querySelectorAll(
-      ".event-card textarea"
+      ".event-card textarea:first-of-type"
     )
-    .forEach((textarea, index) => {
-      if (index % 2 === 0) {
-        const valor =
-          textarea.value.trim();
+    .forEach((textarea) => {
+      const valor =
+        textarea.value.trim();
 
-        if (!valor) return;
+      if (!valor) return;
 
-        participantes +=
-          valor
-            .split(",")
-            .filter(Boolean)
-            .length;
-      }
+      participantes +=
+        valor
+          .split(",")
+          .map((nome) =>
+            nome.trim()
+          )
+          .filter(Boolean).length;
     });
 
   metricas.participantes =
@@ -413,356 +380,11 @@ function atualizarMetricas() {
 }
 
 /* =========================================================
-   📥 COLETA
-========================================================= */
-
-function coletarEventos() {
-  return [
-    ...document.querySelectorAll(
-      ".event-card"
-    ),
-  ].map((card) => {
-    const inputs =
-      card.querySelectorAll(
-        "input"
-      );
-
-    const textareas =
-      card.querySelectorAll(
-        "textarea"
-      );
-
-    return {
-      nome:
-        inputs[0]?.value || "",
-
-      criador:
-        inputs[1]?.value || "",
-
-      dataProgramada:
-        inputs[2]?.value || "",
-
-      dataReal:
-        inputs[3]?.value || "",
-
-      vencedor:
-        inputs[4]?.value || "",
-
-      premio:
-        inputs[5]?.value || "",
-
-      contribuintes:
-        textareas[0]?.value || "",
-
-      adversidades:
-        textareas[1]?.value || "",
-    };
-  });
-}
-
-function coletarFaltas() {
-  return [
-    ...faltasContainer.children,
-  ].map((card) => {
-    const inputs =
-      card.querySelectorAll(
-        "input, select"
-      );
-
-    return {
-      membro:
-        inputs[0]?.value || "",
-
-      ocorrido:
-        inputs[1]?.value || "",
-
-      quantidade:
-        inputs[2]?.value || "",
-
-      advertencia:
-        inputs[3]?.value || "",
-    };
-  });
-}
-
-/* =========================================================
-   📄 PDF
-========================================================= */
-
-function gerarRelatorioHTML() {
-  const mes =
-    document.querySelector(
-      "#mes"
-    )?.value || "";
-
-  const ano =
-    document.querySelector(
-      "#ano"
-    )?.value || "";
-
-  const resumo =
-    document.querySelector(
-      "#resumo-geral"
-    )?.value || "";
-
-  const observacoes =
-    document.querySelector(
-      "#observacoes"
-    )?.value || "";
-
-  const eventos =
-    coletarEventos();
-
-  const faltas =
-    coletarFaltas();
-
-  return `
-    <div
-      style="
-        padding: 50px;
-        font-family: Arial;
-        color: #111;
-      "
-    >
-
-      <h1
-        style="
-          font-size: 34px;
-          margin-bottom: 8px;
-        "
-      >
-        Relatório Mensal
-      </h1>
-
-      <p
-        style="
-          color: #555;
-          margin-bottom: 30px;
-        "
-      >
-        Comitê de Eventos • Sangue Carmesim
-      </p>
-
-      <hr />
-
-      <h2 style="margin-top: 30px;">
-        Informações gerais
-      </h2>
-
-      <ul>
-        <li>
-          <strong>Mês:</strong>
-          ${mes}
-        </li>
-
-        <li>
-          <strong>Ano:</strong>
-          ${ano}
-        </li>
-      </ul>
-
-      <h2 style="margin-top: 30px;">
-        Eventos realizados
-      </h2>
-
-      ${
-        eventos.length === 0
-          ? "<p>Nenhum evento registrado.</p>"
-          : eventos
-              .map(
-                (
-                  evento,
-                  index
-                ) => `
-            <div
-              style="
-                margin-bottom: 30px;
-                padding: 20px;
-                border: 1px solid #ddd;
-                border-radius: 16px;
-              "
-            >
-
-              <h3>
-                Evento ${
-                  index + 1
-                }
-              </h3>
-
-              <p>
-                <strong>Nome:</strong>
-                ${evento.nome}
-              </p>
-
-              <p>
-                <strong>Criador:</strong>
-                ${evento.criador}
-              </p>
-
-              <p>
-                <strong>Programado:</strong>
-                ${evento.dataProgramada}
-              </p>
-
-              <p>
-                <strong>Real:</strong>
-                ${evento.dataReal}
-              </p>
-
-              <p>
-                <strong>Vencedor:</strong>
-                ${evento.vencedor}
-              </p>
-
-              <p>
-                <strong>Prêmio:</strong>
-                ${evento.premio}
-              </p>
-
-              <p>
-                <strong>Contribuintes:</strong>
-                ${evento.contribuintes}
-              </p>
-
-              <p>
-                <strong>Adversidades:</strong>
-                ${evento.adversidades}
-              </p>
-
-            </div>
-          `
-              )
-              .join("")
-      }
-
-      <h2 style="margin-top: 30px;">
-        Resumo geral
-      </h2>
-
-      <p>
-        ${
-          resumo ||
-          "Nenhum resumo registrado."
-        }
-      </p>
-
-      <h2 style="margin-top: 30px;">
-        Faltas cometidas
-      </h2>
-
-      ${
-        faltas.length === 0
-          ? "<p>Nenhuma falta registrada.</p>"
-          : faltas
-              .map(
-                (
-                  falta
-                ) => `
-            <div
-              style="
-                margin-bottom: 20px;
-                padding: 15px;
-                border: 1px solid #ddd;
-                border-radius: 12px;
-              "
-            >
-
-              <p>
-                <strong>Membro:</strong>
-                ${falta.membro}
-              </p>
-
-              <p>
-                <strong>Ocorrido:</strong>
-                ${falta.ocorrido}
-              </p>
-
-              <p>
-                <strong>Quantidade:</strong>
-                ${falta.quantidade}
-              </p>
-
-              <p>
-                <strong>Advertência:</strong>
-                ${falta.advertencia}
-              </p>
-
-            </div>
-          `
-              )
-              .join("")
-      }
-
-      <h2 style="margin-top: 30px;">
-        Observações finais
-      </h2>
-
-      <p>
-        ${
-          observacoes ||
-          "Nenhuma observação registrada."
-        }
-      </p>
-
-    </div>
-  `;
-}
-
-async function gerarPDF() {
-  if (
-    typeof html2pdf ===
-    "undefined"
-  ) {
-    alert(
-      "Biblioteca html2pdf não encontrada."
-    );
-
-    return;
-  }
-
-  const container =
-    document.createElement("div");
-
-  container.innerHTML =
-    gerarRelatorioHTML();
-
-  const options = {
-    margin: 0.5,
-
-    filename:
-      "relatorio-comite-eventos.pdf",
-
-    image: {
-      type: "jpeg",
-      quality: 1,
-    },
-
-    html2canvas: {
-      scale: 2,
-    },
-
-    jsPDF: {
-      unit: "in",
-      format: "a4",
-      orientation:
-        "portrait",
-    },
-  };
-
-  await html2pdf()
-    .set(options)
-    .from(container)
-    .save();
-}
-
-/* =========================================================
    🚀 EVENTS
 ========================================================= */
 
 document
-  .querySelector(
-    "#add-evento"
-  )
+  .querySelector("#add-evento")
   ?.addEventListener(
     "click",
     () => {
@@ -775,9 +397,7 @@ document
   );
 
 document
-  .querySelector(
-    "#add-falta"
-  )
+  .querySelector("#add-falta")
   ?.addEventListener(
     "click",
     () => {
@@ -798,27 +418,28 @@ gerarPDFButton?.addEventListener(
   "click",
   async () => {
     try {
-      gerarPDFButton.disabled =
-        true;
+      gerarPDFButton.disabled = true;
 
       gerarPDFButton.innerHTML =
-        "Gerando PDF...";
+        "🎭 Gerando relatório...";
 
       atualizarMetricas();
 
-      await gerarPDF();
+      await gerarPDF({
+        filename:
+          "relatorio-comite-eventos.pdf",
+      });
     } catch (error) {
       console.error(error);
 
       alert(
-        "Erro ao gerar relatório."
+        "Erro ao gerar relatório PDF."
       );
     } finally {
-      gerarPDFButton.disabled =
-        false;
+      gerarPDFButton.disabled = false;
 
       gerarPDFButton.innerHTML =
-        "📄 Gerar relatório PDF";
+        "📄 Gerar Relatório PDF";
     }
   }
 );
@@ -827,11 +448,11 @@ gerarPDFButton?.addEventListener(
    ⚡ INIT
 ========================================================= */
 
-eventosContainer.appendChild(
+eventosContainer?.appendChild(
   createEventoCard()
 );
 
-faltasContainer.appendChild(
+faltasContainer?.appendChild(
   createFaltaCard()
 );
 
@@ -839,5 +460,5 @@ atualizarMetricas();
 
 console.log(
   "%c🎭 Comitê de Eventos iniciado.",
-  "color: crimson; font-size: 14px; font-weight: bold;"
+  "color:#d946ef;font-size:14px;font-weight:bold;"
 );
