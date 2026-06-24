@@ -1,5 +1,8 @@
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+
 /* =========================================================
-   🎭 PDF • COMITÊ DE EVENTOS
+   PDF • COMITÊ DE EVENTOS
 ========================================================= */
 
 function getValue(id) {
@@ -28,6 +31,8 @@ function coletarFaltas() {
   const container =
     document.querySelector("#faltas-container");
 
+  if (!container) return [];
+
   return [...container.children].map((card) => {
     const campos =
       card.querySelectorAll("input, select");
@@ -41,270 +46,270 @@ function coletarFaltas() {
   });
 }
 
-function gerarHTMLRelatorio() {
+function adicionarTitulo(doc, texto, y) {
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.text(texto, 14, y);
+
+  return y + 8;
+}
+
+function adicionarParagrafo(doc, texto, y) {
+  const linhas = doc.splitTextToSize(
+    texto || "-",
+    180
+  );
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+
+  doc.text(linhas, 14, y);
+
+  return y + linhas.length * 6;
+}
+
+export async function gerarPDF({
+  filename = "relatorio-comite-eventos.pdf",
+} = {}) {
+  const doc = new jsPDF();
+
   const mes = getValue("mes");
   const ano = getValue("ano");
 
   const resumo =
-    getValue("resumo-geral");
+    getValue("resumo-geral") ||
+    "Nenhum resumo informado.";
 
   const observacoes =
-    getValue("observacoes");
+    getValue("observacoes") ||
+    "Nenhuma observação registrada.";
 
-  const eventos =
-    coletarEventos();
+  const eventos = coletarEventos();
+  const faltas = coletarFaltas();
 
-  const faltas =
-    coletarFaltas();
+  /* ======================================================
+     CAPA
+  ====================================================== */
 
-  return `
-    <div
-      style="
-        padding:40px;
-        font-family:Arial,sans-serif;
-        color:#111827;
-        line-height:1.6;
-      "
-    >
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(24);
 
-      <h1
-        style="
-          margin:0;
-          font-size:30px;
-          color:#6d28d9;
-        "
-      >
-        🌫️💬 Relatório Mensal
-      </h1>
+  doc.text(
+    "RELATORIO MENSAL",
+    105,
+    40,
+    { align: "center" }
+  );
 
-      <p
-        style="
-          margin-top:5px;
-          color:#6b7280;
-        "
-      >
-        Comitê de Eventos • Sangue Carmesim
-      </p>
+  doc.setFontSize(16);
 
-      <hr
-        style="
-          margin:20px 0;
-        "
-      >
+  doc.text(
+    "Comite de Eventos",
+    105,
+    55,
+    { align: "center" }
+  );
 
-      <h2>
-        ♦️ Mês
-      </h2>
+  doc.setFontSize(12);
 
-      <p>
-        <strong>${mes}</strong> / ${ano}
-      </p>
+  doc.text(
+    `Periodo: ${mes}/${ano}`,
+    105,
+    70,
+    { align: "center" }
+  );
 
-      <h2>
-        📇 Eventos realizados
-      </h2>
+  doc.line(30, 80, 180, 80);
 
-      ${
-        eventos.length
-          ? eventos
-              .map(
-                (
-                  evento,
-                  index
-                ) => `
-            <div
-              style="
-                border:1px solid #e5e7eb;
-                border-radius:12px;
-                padding:20px;
-                margin-bottom:20px;
-              "
-            >
+  doc.setFontSize(10);
 
-              <h3>
-                Evento ${index + 1}
-              </h3>
+  doc.text(
+    `Gerado em ${new Date().toLocaleDateString("pt-BR")}`,
+    105,
+    90,
+    { align: "center" }
+  );
 
-              <p>
-                <strong>Nome do evento:</strong>
-                ${evento.nome}
-              </p>
+  /* ======================================================
+     NOVA PAGINA
+  ====================================================== */
 
-              <p>
-                <strong>Informações adversas:</strong>
-                ${evento.adversidades}
-              </p>
+  doc.addPage();
 
-              <p>
-                <strong>Data programada:</strong>
-                ${evento.dataProgramada}
-              </p>
+  let y = 20;
 
-              <p>
-                <strong>Data real:</strong>
-                ${evento.dataReal}
-              </p>
+  /* ======================================================
+     EVENTOS
+  ====================================================== */
 
-              <p>
-                <strong>Quem deu a ideia?</strong>
-                ${evento.criador}
-              </p>
+  y = adicionarTitulo(
+    doc,
+    "EVENTOS REALIZADOS",
+    y
+  );
 
-              <p>
-                <strong>Contribuintes ativos:</strong>
-                ${evento.contribuintes}
-              </p>
+  if (eventos.length) {
+    eventos.forEach((evento, index) => {
+      autoTable(doc, {
+        startY: y,
 
-              <p>
-                <strong>Vencedor:</strong>
-                ${evento.vencedor}
-              </p>
+        head: [[`Evento ${index + 1}`]],
 
-              <p>
-                <strong>Prêmio:</strong>
-                ${evento.premio}
-              </p>
+        body: [
+          ["Nome", evento.nome],
+          ["Criador", evento.criador],
+          [
+            "Data Programada",
+            evento.dataProgramada,
+          ],
+          ["Data Real", evento.dataReal],
+          [
+            "Contribuintes",
+            evento.contribuintes,
+          ],
+          [
+            "Informacoes Adversas",
+            evento.adversidades,
+          ],
+          ["Vencedor", evento.vencedor],
+          ["Premio", evento.premio],
+        ],
 
-            </div>
-          `
-              )
-              .join("")
-          : "<p>Nenhum evento registrado.</p>"
-      }
+        theme: "grid",
 
-      <h2>
-        ♦️ Resumo Geral
-      </h2>
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+        },
 
-      <p>
-        ${
-          resumo ||
-          "Nenhum resumo informado."
-        }
-      </p>
+        headStyles: {
+          fillColor: [109, 40, 217],
+        },
+      });
 
-      <h2>
-        ♦️ Faltas Cometidas
-      </h2>
-
-      <div
-        style="
-          background:#f9fafb;
-          padding:15px;
-          border-radius:12px;
-          margin-bottom:20px;
-        "
-      >
-        <strong>Exemplos de faltas:</strong>
-
-        <ul>
-          <li>
-            Não entregar o que foi pedido no prazo.
-          </li>
-
-          <li>
-            Desrespeitar colegas do comitê.
-          </li>
-        </ul>
-      </div>
-
-      ${
-        faltas.length
-          ? faltas
-              .map(
-                (falta) => `
-            <div
-              style="
-                border:1px solid #e5e7eb;
-                border-radius:12px;
-                padding:15px;
-                margin-bottom:15px;
-              "
-            >
-
-              <p>
-                <strong>🔖 Membro em questão:</strong>
-                ${falta.membro}
-              </p>
-
-              <p>
-                <strong>⁉️ O que aconteceu?</strong>
-                ${falta.ocorrido}
-              </p>
-
-              <p>
-                <strong>⚠️ Nº de vezes:</strong>
-                ${falta.quantidade}
-              </p>
-
-              <p>
-                <strong>🛑 Aplicou advertência?</strong>
-                ${falta.advertencia}
-              </p>
-
-            </div>
-          `
-              )
-              .join("")
-          : "<p>Nenhuma falta registrada.</p>"
-      }
-
-      <h2>
-        📝 Observações finais
-      </h2>
-
-      <p>
-        ${
-          observacoes ||
-          "Nenhuma observação registrada."
-        }
-      </p>
-
-    </div>
-  `;
-}
-
-export async function gerarPDF({
-  filename =
-    "relatorio-comite-eventos.pdf",
-} = {}) {
-  if (
-    typeof html2pdf ===
-    "undefined"
-  ) {
-    throw new Error(
-      "html2pdf não encontrado."
+      y = doc.lastAutoTable.finalY + 10;
+    });
+  } else {
+    y = adicionarParagrafo(
+      doc,
+      "Nenhum evento registrado.",
+      y
     );
   }
 
-  const container =
-    document.createElement("div");
+  /* ======================================================
+     RESUMO
+  ====================================================== */
 
-  container.innerHTML =
-    gerarHTMLRelatorio();
+  if (y > 240) {
+    doc.addPage();
+    y = 20;
+  }
 
-  await html2pdf()
-    .set({
-      margin: 0.5,
+  y = adicionarTitulo(
+    doc,
+    "RESUMO GERAL",
+    y + 10
+  );
 
-      filename,
+  y = adicionarParagrafo(
+    doc,
+    resumo,
+    y
+  );
 
-      image: {
-        type: "jpeg",
-        quality: 1,
+  /* ======================================================
+     FALTAS
+  ====================================================== */
+
+  if (y > 180) {
+    doc.addPage();
+    y = 20;
+  }
+
+  y = adicionarTitulo(
+    doc,
+    "FALTAS REGISTRADAS",
+    y + 10
+  );
+
+  if (faltas.length) {
+    autoTable(doc, {
+      startY: y,
+
+      head: [[
+        "Membro",
+        "Ocorrido",
+        "Qtd.",
+        "Advertencia"
+      ]],
+
+      body: faltas.map((f) => [
+        f.membro,
+        f.ocorrido,
+        f.quantidade,
+        f.advertencia,
+      ]),
+
+      theme: "striped",
+
+      styles: {
+        fontSize: 10,
       },
 
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
+      headStyles: {
+        fillColor: [185, 28, 28],
       },
+    });
 
-      jsPDF: {
-        unit: "in",
-        format: "a4",
-        orientation: "portrait",
-      },
-    })
-    .from(container)
-    .save();
+    y = doc.lastAutoTable.finalY + 10;
+  } else {
+    y = adicionarParagrafo(
+      doc,
+      "Nenhuma falta registrada.",
+      y
+    );
+  }
+
+  /* ======================================================
+     OBSERVACOES
+  ====================================================== */
+
+  if (y > 220) {
+    doc.addPage();
+    y = 20;
+  }
+
+  y = adicionarTitulo(
+    doc,
+    "OBSERVACOES FINAIS",
+    y + 10
+  );
+
+  adicionarParagrafo(
+    doc,
+    observacoes,
+    y
+  );
+
+  /* ======================================================
+     RODAPE
+  ====================================================== */
+
+  const paginas = doc.getNumberOfPages();
+
+  for (let i = 1; i <= paginas; i++) {
+    doc.setPage(i);
+
+    doc.setFontSize(9);
+
+    doc.text(
+      `Pagina ${i} de ${paginas}`,
+      105,
+      290,
+      { align: "center" }
+    );
+  }
+
+  doc.save(filename);
 }
