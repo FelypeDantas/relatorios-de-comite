@@ -1,8 +1,7 @@
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+const { jsPDF } = window.jspdf;
 
 /* =========================================================
-   PDF • COMITÊ DE EVENTOS
+   HELPERS
 ========================================================= */
 
 function getValue(id) {
@@ -31,8 +30,6 @@ function coletarFaltas() {
   const container =
     document.querySelector("#faltas-container");
 
-  if (!container) return [];
-
   return [...container.children].map((card) => {
     const campos =
       card.querySelectorAll("input, select");
@@ -46,270 +43,374 @@ function coletarFaltas() {
   });
 }
 
-function adicionarTitulo(doc, texto, y) {
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.text(texto, 14, y);
-
-  return y + 8;
+function caixa(doc, x, y, w, h) {
+  doc.roundedRect(
+    x,
+    y,
+    w,
+    h,
+    4,
+    4
+  );
 }
 
-function adicionarParagrafo(doc, texto, y) {
-  const linhas = doc.splitTextToSize(
-    texto || "-",
-    180
+function escreverMultilinha(
+  doc,
+  texto,
+  x,
+  y,
+  largura
+) {
+  const linhas =
+    doc.splitTextToSize(
+      texto || "-",
+      largura
+    );
+
+  doc.text(
+    linhas,
+    x,
+    y
   );
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-
-  doc.text(linhas, 14, y);
-
-  return y + linhas.length * 6;
+  return linhas.length * 6;
 }
 
-export async function gerarPDF({
-  filename = "relatorio-comite-eventos.pdf",
-} = {}) {
-  const doc = new jsPDF();
+/* =========================================================
+   PDF
+========================================================= */
 
-  const mes = getValue("mes");
-  const ano = getValue("ano");
+export async function gerarPDF({
+  filename =
+    "relatorio-comite-eventos.pdf",
+} = {}) {
+  const doc =
+    new jsPDF("p", "mm", "a4");
+
+  const mes =
+    getValue("mes");
+
+  const ano =
+    getValue("ano");
 
   const resumo =
-    getValue("resumo-geral") ||
+    getValue(
+      "resumo-geral"
+    ) ||
     "Nenhum resumo informado.";
 
   const observacoes =
-    getValue("observacoes") ||
+    getValue(
+      "observacoes"
+    ) ||
     "Nenhuma observação registrada.";
 
-  const eventos = coletarEventos();
-  const faltas = coletarFaltas();
+  const eventos =
+    coletarEventos();
 
-  /* ======================================================
+  const faltas =
+    coletarFaltas();
+
+  let y = 20;
+
+  /* ======================================
      CAPA
-  ====================================================== */
+  ====================================== */
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(24);
-
-  doc.text(
-    "RELATORIO MENSAL",
-    105,
-    40,
-    { align: "center" }
+  doc.setFillColor(
+    80,
+    20,
+    120
   );
 
-  doc.setFontSize(16);
+  doc.rect(
+    0,
+    0,
+    210,
+    297,
+    "F"
+  );
+
+  doc.setTextColor(
+    255,
+    255,
+    255
+  );
+
+  doc.setFontSize(28);
 
   doc.text(
-    "Comite de Eventos",
+    "SANGUE CARMESIM",
     105,
-    55,
-    { align: "center" }
+    70,
+    {
+      align:
+        "center",
+    }
+  );
+
+  doc.setFontSize(18);
+
+  doc.text(
+    "COMITE DE EVENTOS",
+    105,
+    90,
+    {
+      align:
+        "center",
+    }
   );
 
   doc.setFontSize(12);
 
   doc.text(
-    `Periodo: ${mes}/${ano}`,
+    `${mes}/${ano}`,
     105,
-    70,
-    { align: "center" }
-  );
-
-  doc.line(30, 80, 180, 80);
-
-  doc.setFontSize(10);
-
-  doc.text(
-    `Gerado em ${new Date().toLocaleDateString("pt-BR")}`,
     105,
-    90,
-    { align: "center" }
+    {
+      align:
+        "center",
+    }
   );
-
-  /* ======================================================
-     NOVA PAGINA
-  ====================================================== */
 
   doc.addPage();
 
-  let y = 20;
+  /* ======================================
+     RESUMO
+  ====================================== */
 
-  /* ======================================================
-     EVENTOS
-  ====================================================== */
+  doc.setTextColor(
+    20,
+    20,
+    20
+  );
 
-  y = adicionarTitulo(
-    doc,
-    "EVENTOS REALIZADOS",
+  y = 20;
+
+  doc.setFontSize(20);
+
+  doc.text(
+    "Resumo Geral",
+    15,
     y
   );
 
-  if (eventos.length) {
-    eventos.forEach((evento, index) => {
-      autoTable(doc, {
-        startY: y,
+  y += 12;
 
-        head: [[`Evento ${index + 1}`]],
+  doc.setFontSize(11);
 
-        body: [
-          ["Nome", evento.nome],
-          ["Criador", evento.criador],
-          [
-            "Data Programada",
-            evento.dataProgramada,
-          ],
-          ["Data Real", evento.dataReal],
-          [
-            "Contribuintes",
-            evento.contribuintes,
-          ],
-          [
-            "Informacoes Adversas",
-            evento.adversidades,
-          ],
-          ["Vencedor", evento.vencedor],
-          ["Premio", evento.premio],
-        ],
-
-        theme: "grid",
-
-        styles: {
-          fontSize: 10,
-          cellPadding: 3,
-        },
-
-        headStyles: {
-          fillColor: [109, 40, 217],
-        },
-      });
-
-      y = doc.lastAutoTable.finalY + 10;
-    });
-  } else {
-    y = adicionarParagrafo(
-      doc,
-      "Nenhum evento registrado.",
-      y
-    );
-  }
-
-  /* ======================================================
-     RESUMO
-  ====================================================== */
-
-  if (y > 240) {
-    doc.addPage();
-    y = 20;
-  }
-
-  y = adicionarTitulo(
-    doc,
-    "RESUMO GERAL",
-    y + 10
-  );
-
-  y = adicionarParagrafo(
+  y += escreverMultilinha(
     doc,
     resumo,
+    15,
+    y,
+    180
+  );
+
+  y += 15;
+
+  /* ======================================
+     EVENTOS
+  ====================================== */
+
+  doc.setFontSize(20);
+
+  doc.text(
+    "Eventos",
+    15,
     y
   );
 
-  /* ======================================================
+  y += 10;
+
+  eventos.forEach(
+    (
+      evento,
+      index
+    ) => {
+      if (
+        y > 220
+      ) {
+        doc.addPage();
+        y = 20;
+      }
+
+      caixa(
+        doc,
+        10,
+        y,
+        190,
+        45
+      );
+
+      doc.setFontSize(
+        14
+      );
+
+      doc.text(
+        `Evento ${
+          index + 1
+        }`,
+        15,
+        y + 8
+      );
+
+      doc.setFontSize(
+        10
+      );
+
+      doc.text(
+        `Nome: ${evento.nome}`,
+        15,
+        y + 16
+      );
+
+      doc.text(
+        `Criador: ${evento.criador}`,
+        15,
+        y + 22
+      );
+
+      doc.text(
+        `Programado: ${evento.dataProgramada}`,
+        15,
+        y + 28
+      );
+
+      doc.text(
+        `Real: ${evento.dataReal}`,
+        15,
+        y + 34
+      );
+
+      doc.text(
+        `Vencedor: ${evento.vencedor}`,
+        100,
+        y + 16
+      );
+
+      doc.text(
+        `Premio: ${evento.premio}`,
+        100,
+        y + 22
+      );
+
+      y += 55;
+    }
+  );
+
+  /* ======================================
      FALTAS
-  ====================================================== */
+  ====================================== */
 
-  if (y > 180) {
-    doc.addPage();
-    y = 20;
-  }
+  doc.addPage();
 
-  y = adicionarTitulo(
-    doc,
-    "FALTAS REGISTRADAS",
-    y + 10
+  y = 20;
+
+  doc.setFontSize(20);
+
+  doc.text(
+    "Faltas",
+    15,
+    y
   );
 
-  if (faltas.length) {
-    autoTable(doc, {
-      startY: y,
+  y += 15;
 
-      head: [[
-        "Membro",
-        "Ocorrido",
-        "Qtd.",
-        "Advertencia"
-      ]],
+  faltas.forEach(
+    (falta) => {
+      caixa(
+        doc,
+        10,
+        y,
+        190,
+        30
+      );
 
-      body: faltas.map((f) => [
-        f.membro,
-        f.ocorrido,
-        f.quantidade,
-        f.advertencia,
-      ]),
+      doc.setFontSize(
+        11
+      );
 
-      theme: "striped",
+      doc.text(
+        `Membro: ${falta.membro}`,
+        15,
+        y + 10
+      );
 
-      styles: {
-        fontSize: 10,
-      },
+      doc.text(
+        `Ocorrido: ${falta.ocorrido}`,
+        15,
+        y + 18
+      );
 
-      headStyles: {
-        fillColor: [185, 28, 28],
-      },
-    });
+      doc.text(
+        `Qtd: ${falta.quantidade}`,
+        120,
+        y + 10
+      );
 
-    y = doc.lastAutoTable.finalY + 10;
-  } else {
-    y = adicionarParagrafo(
-      doc,
-      "Nenhuma falta registrada.",
-      y
-    );
-  }
+      doc.text(
+        `Advertencia: ${falta.advertencia}`,
+        120,
+        y + 18
+      );
 
-  /* ======================================================
+      y += 40;
+    }
+  );
+
+  /* ======================================
      OBSERVACOES
-  ====================================================== */
+  ====================================== */
 
-  if (y > 220) {
-    doc.addPage();
-    y = 20;
-  }
+  doc.addPage();
 
-  y = adicionarTitulo(
-    doc,
-    "OBSERVACOES FINAIS",
-    y + 10
+  y = 20;
+
+  doc.setFontSize(20);
+
+  doc.text(
+    "Observacoes Finais",
+    15,
+    y
   );
 
-  adicionarParagrafo(
+  y += 15;
+
+  doc.setFontSize(11);
+
+  escreverMultilinha(
     doc,
     observacoes,
-    y
+    15,
+    y,
+    180
   );
 
-  /* ======================================================
+  /* ======================================
      RODAPE
-  ====================================================== */
+  ====================================== */
 
-  const paginas = doc.getNumberOfPages();
+  const total =
+    doc.getNumberOfPages();
 
-  for (let i = 1; i <= paginas; i++) {
+  for (
+    let i = 1;
+    i <= total;
+    i++
+  ) {
     doc.setPage(i);
 
     doc.setFontSize(9);
 
     doc.text(
-      `Pagina ${i} de ${paginas}`,
-      105,
-      290,
-      { align: "center" }
+      `${i}/${total}`,
+      190,
+      290
     );
   }
 
-  doc.save(filename);
+  doc.save(
+    filename
+  );
 }
