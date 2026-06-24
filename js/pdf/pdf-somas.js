@@ -8,38 +8,32 @@ export async function gerarPDF({
   let y = 20;
 
   const escrever = (
-    texto,
-    tamanho = 11,
-    espacamento = 8
-  ) => {
-    pdf.setFontSize(tamanho);
+  texto,
+  tamanho = 11,
+  espacamento = 8
+) => {
+  pdf.setFontSize(tamanho);
 
-    pdf.text(texto, 15, y);
+  const linhas =
+    pdf.splitTextToSize(
+      String(texto),
+      180
+    );
 
-    y += espacamento;
-
-    if (y > 270) {
-      pdf.addPage();
-      y = 20;
-    }
-  };
-
-  const valor = (id) =>
-    document.querySelector(id)?.value || "-";
-
-  escrever(
-    "Relatório mensal - Comitê de Somas",
-    16,
-    12
+  pdf.text(
+    linhas,
+    15,
+    y
   );
 
-  escrever(`Mês: ${valor("#mes")}`);
+  y +=
+    linhas.length * espacamento;
 
-  escrever(
-    `Quantidade de relatórios calculados no total no final do mês: ${valor(
-      "#total-geral"
-    )}`
-  );
+  if (y > 270) {
+    pdf.addPage();
+    y = 20;
+  }
+};
 
   y += 5;
 
