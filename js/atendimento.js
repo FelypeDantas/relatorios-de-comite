@@ -4,15 +4,15 @@ document
 
 async function gerarMensagemWhatsapp() {
 
-  const meta = document.getElementById("meta").value.trim();
-  const observacoes = document.getElementById("observacoes").value.trim();
+  const meta = document.getElementById("meta")?.value.trim() || "-";
+  const observacoes = document.getElementById("observacoes")?.value.trim() || "-";
 
-  let mensagem = "";
+  let mensagem = `🌫️💬 *Relatório mensal – Comitê de Atendimento*
 
-  mensagem += "🌫️💬 *Relatório mensal – Comitê de Atendimento*\n\n";
+♦️ *Meta de atendimento*:
+${meta}
 
-  mensagem += "♦️ *Meta de atendimento*:\n";
-  mensagem += `${meta || "-"}\n\n`;
+`;
 
   // SEMANAS
   for (let semana = 1; semana <= 4; semana++) {
@@ -20,35 +20,37 @@ async function gerarMensagemWhatsapp() {
     mensagem += `📇 *${semana}° Semana*:\n\n`;
 
     const cards = document.querySelectorAll(
-      `[data-semana="${semana}"] .adm-card`
+      `[data-semana="${semana}"] > *`
     );
 
-    cards.forEach(card => {
+    if (cards.length === 0) {
 
-      const adm =
-        card.querySelector(".adm-nome")?.value || "-";
+      mensagem += "_Nenhum ADM registrado._\n\n";
+      continue;
 
-      const contribuicao =
-        card.querySelector(".adm-contribuicao")?.value || "-";
+    }
 
-      const prazo =
-        card.querySelector(".adm-prazo")?.value || "-";
+    cards.forEach((card) => {
+
+      const inputs = card.querySelectorAll("input, textarea, select");
+
+      const adm = inputs[0]?.value.trim() || "-";
+      const contribuicao = inputs[1]?.value.trim() || "-";
+      const prazo = inputs[2]?.value.trim() || "-";
 
       mensagem +=
-        `*Adm*: ${adm}
-        Contribuição: ${contribuicao}
-        Prazo Cumprido?: ${prazo}
-        
-        `;
-
+          `*Adm*: ${adm}
+          Contribuição: ${contribuicao}
+          Prazo Cumprido?: ${prazo}
+          
+          `;
     });
 
-    mensagem += "\n";
   }
 
   mensagem += "♦️ *Faltas Cometidas:*\n\n";
 
-  const faltas = document.querySelectorAll(".falta-card");
+  const faltas = document.querySelectorAll("#faltas-container > *");
 
   if (faltas.length === 0) {
 
@@ -56,27 +58,23 @@ async function gerarMensagemWhatsapp() {
 
   } else {
 
-    faltas.forEach(falta => {
+    faltas.forEach((falta) => {
 
-      const adm =
-        falta.querySelector(".falta-adm")?.value || "-";
+      const inputs = falta.querySelectorAll("input, textarea, select");
 
-      const motivo =
-        falta.querySelector(".falta-motivo")?.value || "-";
-
-      const vezes =
-        falta.querySelector(".falta-vezes")?.value || "-";
-
-      const advertencia =
-        falta.querySelector(".falta-advertencia")?.value || "-";
+      const adm = inputs[0]?.value.trim() || "-";
+      const motivo = inputs[1]?.value.trim() || "-";
+      const vezes = inputs[2]?.value.trim() || "-";
+      const advertencia = inputs[3]?.value.trim() || "-";
 
       mensagem +=
           `🔖 *ADM*: ${adm}
-          ⁉️ O que aconteceu?
+          ⁉️ *O que aconteceu?*
           ${motivo}
-          ⚠️ Nº de vezes:
+          ⚠️ *N° de vezes em que aconteceu*:
           ${vezes}
-          🛑 Aplicou advertência?: ${advertencia}
+          🛑 *Aplicou advertência*?:
+          ${advertencia}
           
           `;
 
@@ -84,16 +82,24 @@ async function gerarMensagemWhatsapp() {
 
   }
 
-  mensagem += "*Obs*:\n";
-  mensagem += observacoes || "-";
+  mensagem += `*Obs*:
+${observacoes}`;
 
-  await navigator.clipboard.writeText(mensagem);
+  try {
 
-  alert("Mensagem copiada para a área de transferência!");
+    await navigator.clipboard.writeText(mensagem);
 
-  // Abre o WhatsApp Web já com a mensagem
+    alert("Mensagem copiada para a área de transferência!");
+
+  } catch (e) {
+
+    console.error(e);
+
+  }
+
   window.open(
     `https://wa.me/?text=${encodeURIComponent(mensagem)}`,
     "_blank"
   );
+
 }
