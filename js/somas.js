@@ -1,9 +1,3 @@
-import { gerarPDF } from "./pdf/pdf-somas.js";
-
-/* =========================================================
-   🧮 SANGUE CARMESIM • COMITÊ DE SOMAS
-========================================================= */
-
 const gerarPDFButton =
   document.querySelector("#gerar-pdf");
 
@@ -419,46 +413,6 @@ function coletarDados() {
     faltas,
   };
 }
-
-/* =========================================================
-   📄 PDF
-========================================================= */
-
-gerarPDFButton?.addEventListener(
-  "click",
-  async () => {
-    try {
-      gerarPDFButton.disabled =
-        true;
-
-      gerarPDFButton.innerHTML =
-        "📄 Gerando PDF...";
-
-      atualizarMetricas();
-
-      const dados =
-        coletarDados();
-
-      await gerarPDF({
-        filename:
-          "relatorio-comite-somas.pdf",
-        dados,
-      });
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        "Erro ao gerar relatório."
-      );
-    } finally {
-      gerarPDFButton.disabled =
-        false;
-
-      gerarPDFButton.innerHTML =
-        "📄 Gerar relatório PDF";
-    }
-  }
-);
 
 /* =========================================================
    🚀 EVENTS
