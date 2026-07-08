@@ -1,411 +1,100 @@
-/* =========================================================
-   🩸 SANGUE CARMESIM • ATENDIMENTO
-========================================================= */
+document
+  .getElementById("gerar-whatsapp")
+  .addEventListener("click", gerarMensagemWhatsapp);
 
-import { gerarPDF } from "./pdf/pdf-atendimento.js";
+async function gerarMensagemWhatsapp() {
 
-/* =========================================================
-   ⚙️ HELPERS
-========================================================= */
+  const meta = document.getElementById("meta").value.trim();
+  const observacoes = document.getElementById("observacoes").value.trim();
 
-const $ = (selector) =>
-  document.querySelector(selector);
+  let mensagem = "";
 
-const $$ = (selector) =>
-  [...document.querySelectorAll(selector)];
+  mensagem += "🌫️💬 *Relatório mensal – Comitê de Atendimento*\n\n";
 
-function createElement(
-  tag,
-  className = ""
-) {
-  const element =
-    document.createElement(tag);
+  mensagem += "♦️ *Meta de atendimento*:\n";
+  mensagem += `${meta || "-"}\n\n`;
 
-  element.className = className;
+  // SEMANAS
+  for (let semana = 1; semana <= 4; semana++) {
 
-  return element;
-}
+    mensagem += `📇 *${semana}° Semana*:\n\n`;
 
-/* =========================================================
-   ⚙️ CONFIG
-========================================================= */
-
-const CONFIG = {
-  MAX_ADMS: 20,
-
-  PDF_FILENAME:
-    "relatorio-atendimento.pdf",
-};
-
-/* =========================================================
-   📦 DOM
-========================================================= */
-
-const DOM = {
-  semanas: $$("[data-semana]"),
-
-  addADMButtons:
-    $$("[data-add-adm]"),
-
-  faltasContainer:
-    $("#faltas-container"),
-
-  addFaltaButton:
-    $("#add-falta"),
-
-  gerarPDFButton:
-    $("#gerar-pdf"),
-
-  main:
-    document.querySelector("main"),
-};
-
-/* =========================================================
-   🎨 CLASSES
-========================================================= */
-
-const CLASSES = {
-  input:
-    "w-full bg-zinc-900 border border-zinc-700 rounded-2xl px-4 py-3 text-white",
-
-  card:
-    "adm-card bg-zinc-950/70 border border-zinc-800 rounded-3xl p-6 space-y-6 animate-fade",
-
-  removeButton:
-    "w-full py-3 rounded-2xl bg-red-950/40 hover:bg-red-900/50 border border-red-800/40 text-red-300 transition-all",
-};
-
-/* =========================================================
-   🧱 FACTORIES
-========================================================= */
-
-function createInput({
-  type = "text",
-  placeholder = "",
-  field,
-}) {
-  const input = createElement(
-    "input",
-    CLASSES.input
-  );
-
-  input.type = type;
-  input.placeholder =
-    placeholder;
-
-  input.dataset.field = field;
-
-  return input;
-}
-
-function createSelect({
-  options = [],
-  field,
-}) {
-  const select =
-    createElement(
-      "select",
-      CLASSES.input
+    const cards = document.querySelectorAll(
+      `[data-semana="${semana}"] .adm-card`
     );
 
-  select.dataset.field = field;
+    cards.forEach(card => {
 
-  select.innerHTML = options
-    .map(
-      (option) =>
-        `<option value="${option}">${option}</option>`
-    )
-    .join("");
+      const adm =
+        card.querySelector(".adm-nome")?.value || "-";
 
-  return select;
-}
+      const contribuicao =
+        card.querySelector(".adm-contribuicao")?.value || "-";
 
-function createField(
-  labelText,
-  input
-) {
-  const wrapper =
-    createElement("div");
+      const prazo =
+        card.querySelector(".adm-prazo")?.value || "-";
 
-  const label =
-    createElement(
-      "label",
-      "block text-sm text-zinc-400 mb-2"
-    );
+      mensagem +=
+`*Adm*: ${adm}
+Contribuição: ${contribuicao}
+Prazo Cumprido?: ${prazo}
 
-  label.textContent =
-    labelText;
+`;
 
-  wrapper.append(
-    label,
-    input
-  );
+    });
 
-  return wrapper;
-}
-
-function createRemoveButton(
-  target
-) {
-  const button =
-    createElement(
-      "button",
-      CLASSES.removeButton
-    );
-
-  button.type = "button";
-
-  button.innerHTML =
-    "🗑️ Remover";
-
-  button.addEventListener(
-    "click",
-    () => target.remove()
-  );
-
-  return button;
-}
-
-function createCard({
-  columns,
-  fields,
-}) {
-  const card =
-    createElement(
-      "div",
-      CLASSES.card
-    );
-
-  const grid =
-    createElement(
-      "div",
-      `grid grid-cols-1 lg:grid-cols-${columns} gap-6`
-    );
-
-  grid.append(...fields);
-
-  card.append(
-    grid,
-    createRemoveButton(card)
-  );
-
-  return card;
-}
-
-/* =========================================================
-   👥 ADM CARD
-========================================================= */
-
-function createADMCard() {
-  return createCard({
-    columns: 3,
-
-    fields: [
-      createField(
-        "ADM",
-        createInput({
-          field: "adm",
-          placeholder:
-            "Nome do ADM",
-        })
-      ),
-
-      createField(
-        "Contribuição",
-        createInput({
-          field:
-            "contribuicao",
-          placeholder:
-            "Ex: 15 atendimentos",
-        })
-      ),
-
-      createField(
-        "Prazo cumprido?",
-        createSelect({
-          field: "prazo",
-
-          options: [
-            "Selecione",
-            "Sim",
-            "Não",
-          ],
-        })
-      ),
-    ],
-  });
-}
-
-/* =========================================================
-   ⚠️ FALTA CARD
-========================================================= */
-
-function createFaltaCard() {
-  return createCard({
-    columns: 4,
-
-    fields: [
-      createField(
-        "ADM",
-        createInput({
-          field: "adm",
-          placeholder:
-            "Nome do ADM",
-        })
-      ),
-
-      createField(
-        "Ocorrido",
-        createInput({
-          field: "ocorrido",
-          placeholder:
-            "Descrição",
-        })
-      ),
-
-      createField(
-        "Quantidade",
-        createInput({
-          field:
-            "quantidade",
-
-          type: "number",
-
-          placeholder: "0",
-        })
-      ),
-
-      createField(
-        "Advertência?",
-        createSelect({
-          field:
-            "advertencia",
-
-          options: [
-            "Selecione",
-            "Sim",
-            "Não",
-          ],
-        })
-      ),
-    ],
-  });
-}
-
-/* =========================================================
-   📄 PDF
-========================================================= */
-
-async function handleGerarPDF() {
-  const button =
-    DOM.gerarPDFButton;
-
-  const originalText =
-    button.innerHTML;
-
-  try {
-    button.disabled = true;
-
-    button.innerHTML =
-      "📄 Gerando PDF...";
-
-    await gerarPDF({
-        filename:
-          CONFIG.PDF_FILENAME,
-      });
-  } catch (error) {
-    console.error(error);
-
-    alert(
-      "Erro ao gerar PDF."
-    );
-  } finally {
-    button.disabled = false;
-
-    button.innerHTML =
-      originalText;
-  }
-}
-
-/* =========================================================
-   🚀 EVENTOS
-========================================================= */
-
-function adicionarADM(
-  semanaId
-) {
-  const container = $(
-    `[data-semana="${semanaId}"]`
-  );
-
-  if (
-    container.children
-      .length >=
-    CONFIG.MAX_ADMS
-  ) {
-    alert(
-      "Limite máximo de ADMs atingido."
-    );
-
-    return;
+    mensagem += "\n";
   }
 
-  container.appendChild(
-    createADMCard()
+  mensagem += "♦️ *Faltas Cometidas:*\n\n";
+
+  const faltas = document.querySelectorAll(".falta-card");
+
+  if (faltas.length === 0) {
+
+    mensagem += "Nenhuma.\n\n";
+
+  } else {
+
+    faltas.forEach(falta => {
+
+      const adm =
+        falta.querySelector(".falta-adm")?.value || "-";
+
+      const motivo =
+        falta.querySelector(".falta-motivo")?.value || "-";
+
+      const vezes =
+        falta.querySelector(".falta-vezes")?.value || "-";
+
+      const advertencia =
+        falta.querySelector(".falta-advertencia")?.value || "-";
+
+      mensagem +=
+`🔖 *ADM*: ${adm}
+⁉️ O que aconteceu?
+${motivo}
+⚠️ Nº de vezes:
+${vezes}
+🛑 Aplicou advertência?: ${advertencia}
+
+`;
+
+    });
+
+  }
+
+  mensagem += "*Obs*:\n";
+  mensagem += observacoes || "-";
+
+  await navigator.clipboard.writeText(mensagem);
+
+  alert("Mensagem copiada para a área de transferência!");
+
+  // Abre o WhatsApp Web já com a mensagem
+  window.open(
+    `https://wa.me/?text=${encodeURIComponent(mensagem)}`,
+    "_blank"
   );
+
 }
-
-function registrarEventos() {
-  DOM.addADMButtons.forEach(
-    (button) => {
-      button.addEventListener(
-        "click",
-        () =>
-          adicionarADM(
-            button.dataset
-              .addAdm
-          )
-      );
-    }
-  );
-
-  DOM.addFaltaButton?.addEventListener(
-    "click",
-    () => {
-      DOM.faltasContainer.appendChild(
-        createFaltaCard()
-      );
-    }
-  );
-
-  DOM.gerarPDFButton?.addEventListener(
-    "click",
-    handleGerarPDF
-  );
-}
-
-/* =========================================================
-   ⚡ INIT
-========================================================= */
-
-function init() {
-  DOM.semanas.forEach(
-    (semana) =>
-      semana.appendChild(
-        createADMCard()
-      )
-  );
-
-  DOM.faltasContainer?.appendChild(
-    createFaltaCard()
-  );
-
-  registrarEventos();
-
-  console.log(
-    "%c🩸 Sistema Carmesim iniciado.",
-    "color: crimson;font-size:14px;font-weight:bold;"
-  );
-}
-
-init();
