@@ -35,11 +35,11 @@ async function gerarMensagemWhatsapp() {
         card.querySelector(".adm-prazo")?.value || "-";
 
       mensagem +=
-`*Adm*: ${adm}
-Contribuição: ${contribuicao}
-Prazo Cumprido?: ${prazo}
-
-`;
+        `*Adm*: ${adm}
+        Contribuição: ${contribuicao}
+        Prazo Cumprido?: ${prazo}
+        
+        `;
 
     });
 
@@ -71,14 +71,14 @@ Prazo Cumprido?: ${prazo}
         falta.querySelector(".falta-advertencia")?.value || "-";
 
       mensagem +=
-`🔖 *ADM*: ${adm}
-⁉️ O que aconteceu?
-${motivo}
-⚠️ Nº de vezes:
-${vezes}
-🛑 Aplicou advertência?: ${advertencia}
-
-`;
+          `🔖 *ADM*: ${adm}
+          ⁉️ O que aconteceu?
+          ${motivo}
+          ⚠️ Nº de vezes:
+          ${vezes}
+          🛑 Aplicou advertência?: ${advertencia}
+          
+          `;
 
     });
 
@@ -96,5 +96,4 @@ ${vezes}
     `https://wa.me/?text=${encodeURIComponent(mensagem)}`,
     "_blank"
   );
-
 }
