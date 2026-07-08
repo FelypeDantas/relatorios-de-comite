@@ -103,3 +103,74 @@ ${observacoes}`;
   );
 
 }
+
+function createAdmCard() {
+
+    const card = document.createElement("div");
+
+    card.className =
+        "adm-card metric-card animate-fade";
+
+    const grid = document.createElement("div");
+
+    grid.className =
+        "grid grid-cols-1 lg:grid-cols-3 gap-6";
+
+    const admField = createField({
+        label: "ADM",
+        input: createInput({
+            placeholder: "Nome do ADM"
+        })
+    });
+
+    admField.querySelector("input")
+        .classList.add("adm-nome");
+
+    const contribuicaoField = createField({
+        label: "Contribuição",
+        input: createInput({
+            placeholder: "Descreva a contribuição"
+        })
+    });
+
+    contribuicaoField.querySelector("input")
+        .classList.add("adm-contribuicao");
+
+    const prazoField = createField({
+        label: "Prazo cumprido?",
+        input: createSelect([
+            "Selecione",
+            "Sim",
+            "Não"
+        ])
+    });
+
+    prazoField.querySelector("select")
+        .classList.add("adm-prazo");
+
+    grid.append(
+        admField,
+        contribuicaoField,
+        prazoField
+    );
+
+    card.appendChild(grid);
+
+    const removeButton =
+        document.createElement("button");
+
+    removeButton.type = "button";
+
+    removeButton.className =
+        "mt-6 w-full bg-red-950/30 hover:bg-red-900/40 border border-red-800/40 text-red-300 py-3 rounded-2xl transition-all";
+
+    removeButton.textContent =
+        "Remover ADM";
+
+    removeButton.onclick = () => card.remove();
+
+    card.appendChild(removeButton);
+
+    return card;
+
+}
