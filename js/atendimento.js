@@ -314,10 +314,6 @@ function coletarDados() {
    🚀 EVENTS
 ========================================================= */
 
-/* =========================================================
-   🚀 EVENTS
-========================================================= */
-
 // Adicionar ADM na semana correspondente
 addAdmButtons.forEach((button) => {
 
@@ -370,10 +366,7 @@ async function gerarMensagemWhatsapp() {
 
   let mensagem = `🌫️💬 *Relatório mensal – Comitê de Atendimento*
 
-♦️ *Meta de atendimento*:
-${meta}
-
-`;
+        ♦️ *Meta de atendimento*: ${meta}`;
 
   // SEMANAS
   for (let semana = 1; semana <= 4; semana++) {
@@ -457,11 +450,6 @@ ${observacoes}`;
     console.error(e);
 
   }
-
-  window.open(
-    `https://wa.me/?text=${encodeURIComponent(mensagem)}`,
-    "_blank"
-  );
 
 }
 
