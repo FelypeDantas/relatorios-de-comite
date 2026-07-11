@@ -1,9 +1,3 @@
-import { gerarPDF } from "./pdf/pdf-eventos.js";
-
-/* =========================================================
-   🎭 SANGUE CARMESIM • COMITÊ DE EVENTOS
-========================================================= */
-
 const eventosContainer =
   document.querySelector("#eventos-container");
 
