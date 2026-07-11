@@ -508,11 +508,6 @@ ${falta.advertencia || "-"}
 
     await navigator.clipboard.writeText(mensagem);
 
-    window.open(
-      `https://wa.me/?text=${encodeURIComponent(mensagem)}`,
-      "_blank"
-    );
-
     alert("Mensagem copiada para a área de transferência!");
 
   } catch (e) {
