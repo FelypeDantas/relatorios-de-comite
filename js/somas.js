@@ -1,5 +1,5 @@
-const gerarPDFButton =
-  document.querySelector("#gerar-pdf");
+const gerarWhatsappButton =
+  document.querySelector("#gerar-whatsapp");
 
 const faltasWrapper =
   document.querySelector("#faltas-wrapper");
@@ -414,6 +414,117 @@ function coletarDados() {
   };
 }
 
+async function gerarMensagemWhatsapp() {
+
+  atualizarMetricas();
+
+  const dados = coletarDados();
+
+  let mensagem = "";
+
+  mensagem += "🌫️💬 *Relatório mensal - Comitê de Somas*\n\n";
+
+  mensagem += `♦️ *Mês:* ${dados.mes || "-"}\n\n`;
+
+  mensagem += `♦️ *Quantidade de relatórios calculados no total no final do mês:*\n`;
+  mensagem += `${dados.total || "0"}\n\n`;
+
+  for (let i = 1; i <= 3; i++) {
+
+    mensagem += `📇 *${i}° Semana:*\n\n`;
+
+    mensagem += `*N° de relatórios sobre ADMs de estantes aleatórias calculados:* ${getValue(`#s${i}-aleatorios`) || 0}\n`;
+
+    mensagem += `*N° de relatórios sobre ADMs FIXO calculados:* ${getValue(`#s${i}-fixos`) || 0}\n`;
+
+    mensagem += `*N° de relatórios sobre membros comuns calculados:* ${getValue(`#s${i}-comuns`) || 0}\n\n`;
+
+  }
+
+  mensagem += "📇 *4° Semana:*\n";
+  mensagem += "⚠️ Pausa ⚠️\n\n";
+
+  mensagem += "♦️ *Quantidade de relatórios calculada por membro do comitê:*\n\n";
+
+  if (dados.membros.length === 0) {
+
+    mensagem += "Nenhum membro informado.\n\n";
+
+  } else {
+
+    dados.membros.forEach((membro) => {
+
+      mensagem += `*${membro.nome || "-"}:* ${membro.quantidade || 0}\n`;
+
+    });
+
+    mensagem += "\n";
+
+  }
+
+  mensagem += "♦️ *Destaques do mês:*\n\n";
+
+  mensagem += "*Top 3 membros com mais pontos:*\n";
+  mensagem += `${dados.topMembros || "-"}\n\n`;
+
+  mensagem += "*Top 3 ADMs com mais pontos:*\n";
+  mensagem += `${dados.topAdms || "-"}\n\n`;
+
+  mensagem += "*Membros destaque do comitê:*\n";
+  mensagem += `${dados.destaques || "-"}\n\n`;
+
+  mensagem += "♦️ *Faltas cometidas:*\n\n";
+
+  if (dados.faltas.length === 0) {
+
+    mensagem += "Nenhuma falta registrada.\n\n";
+
+  } else {
+
+    dados.faltas.forEach((falta) => {
+
+      mensagem +=
+`🔖 *Membro em questão:* ${falta.membro || "-"}
+
+⁉️ *O que aconteceu?*
+${falta.ocorrido || "-"}
+
+⚠️ *N° de vezes em que aconteceu:*
+${falta.quantidade || 0}
+
+🛑 *Aplicou advertência?*
+${falta.advertencia || "-"}
+
+`;
+
+    });
+
+  }
+
+  mensagem += "📝 *Observações finais:*\n";
+  mensagem += `${dados.observacoes || "-"}\n`;
+
+  try {
+
+    await navigator.clipboard.writeText(mensagem);
+
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(mensagem)}`,
+      "_blank"
+    );
+
+    alert("Mensagem copiada para a área de transferência!");
+
+  } catch (e) {
+
+    console.error(e);
+
+    alert("Erro ao gerar mensagem.");
+
+  }
+
+}
+
 /* =========================================================
    🚀 EVENTS
 ========================================================= */
@@ -440,6 +551,11 @@ totalInputs.forEach((input) => {
     atualizarMetricas
   );
 });
+
+gerarWhatsappButton?.addEventListener(
+  "click",
+  gerarMensagemWhatsapp
+);
 
 /* =========================================================
    ⚡ INIT
