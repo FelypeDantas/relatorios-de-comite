@@ -427,6 +427,130 @@ faltasContainer?.appendChild(
 
 atualizarMetricas();
 
+async function gerarMensagemWhatsapp() {
+
+  const mes =
+    document.querySelector("#mes").value.trim();
+
+  const resumo =
+    document.querySelector("#resumo-geral").value.trim();
+
+  const observacoes =
+    document.querySelector("#observacoes").value.trim();
+
+  let mensagem = "";
+
+  mensagem += "🌫️💬 *Relatório mensal - Comitê de Eventos*\n\n";
+
+  mensagem += `♦️ *Mês:*\n${mes || "-"}\n\n`;
+
+  mensagem += "📇 *Eventos realizados:*\n\n";
+
+  document
+    .querySelectorAll(".event-card")
+    .forEach((card) => {
+
+      const inputs =
+        card.querySelectorAll("input");
+
+      const textareas =
+        card.querySelectorAll("textarea");
+
+      mensagem +=
+`*Nome do evento:*
+${inputs[0]?.value || "-"}
+
+*Informações adversas:*
+${textareas[1]?.value || "-"}
+
+*Data programada para início e término:*
+${inputs[2]?.value || "-"}
+
+*Data em que realmente começou e terminou:*
+${inputs[3]?.value || "-"}
+
+*Quem deu a ideia do evento?*
+${inputs[1]?.value || "-"}
+
+*Contribuintes ativos do evento:*
+${textareas[0]?.value || "-"}
+
+*Vencedor do evento:*
+${inputs[4]?.value || "-"}
+
+*Prêmio do evento:*
+${inputs[5]?.value || "-"}
+
+`;
+    });
+
+  mensagem +=
+`♦️ *Resumo geral:*
+
+${resumo || "-"}
+
+`;
+
+  mensagem += "♦️ *Faltas cometidas:*\n\n";
+
+  const faltas =
+    document.querySelectorAll(
+      "#faltas-container .metric-card"
+    );
+
+  if (faltas.length === 0) {
+
+    mensagem += "Nenhuma falta registrada.\n\n";
+
+  } else {
+
+    faltas.forEach((card) => {
+
+      const inputs =
+        card.querySelectorAll("input");
+
+      const select =
+        card.querySelector("select");
+
+      mensagem +=
+`🔖 *Membro em questão:*
+${inputs[0]?.value || "-"}
+
+⁉️ *O que aconteceu?:*
+${inputs[1]?.value || "-"}
+
+⚠️ *N° de vezes em que aconteceu:*
+${inputs[2]?.value || "-"}
+
+🛑 *Aplicou advertência?:*
+${select?.value || "-"}
+
+`;
+    });
+
+  }
+
+  mensagem +=
+`📝 *Observações finais:*
+
+${observacoes || "-"}`;
+
+  try {
+
+    await navigator.clipboard.writeText(mensagem);
+
+    alert("Mensagem copiada para a área de transferência!");
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    alert("Erro ao gerar a mensagem.");
+
+  }
+
+}
+
 console.log(
   "%c🎭 Comitê de Eventos iniciado.",
   "color:#d946ef;font-size:14px;font-weight:bold;"
