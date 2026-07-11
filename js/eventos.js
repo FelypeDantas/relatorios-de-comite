@@ -408,34 +408,9 @@ document.addEventListener(
   atualizarMetricas
 );
 
-gerarPDFButton?.addEventListener(
+gerarWhatsappButton?.addEventListener(
   "click",
-  async () => {
-    try {
-      gerarPDFButton.disabled = true;
-
-      gerarPDFButton.innerHTML =
-        "🎭 Gerando relatório...";
-
-      atualizarMetricas();
-
-      await gerarPDF({
-        filename:
-          "relatorio-comite-eventos.pdf",
-      });
-    } catch (error) {
-      console.error(error);
-
-      alert(
-        "Erro ao gerar relatório PDF."
-      );
-    } finally {
-      gerarPDFButton.disabled = false;
-
-      gerarPDFButton.innerHTML =
-        "📄 Gerar Relatório PDF";
-    }
-  }
+  gerarMensagemWhatsapp
 );
 
 /* =========================================================
