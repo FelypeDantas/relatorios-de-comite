@@ -1,11 +1,3 @@
-import {
-  gerarPDFCompras
-} from "./pdf-compras.js";
-
-/* =========================================================
-   ELEMENTOS
-========================================================= */
-
 const comprasContainer =
   document.querySelector(
     "#compras-container"
