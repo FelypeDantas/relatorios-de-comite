@@ -153,83 +153,47 @@ function createRemoveButton(
 /* =========================================================
    COMPRA
 ========================================================= */
-
 function createCompraCard() {
-  const card =
-    document.createElement(
-      "div"
-    );
+  const card = document.createElement("div");
 
-  card.className =
-    "event-card animate-fade";
+  card.className = "event-card animate-fade";
 
-  const grid =
-    document.createElement(
-      "div"
-    );
+  const grid = document.createElement("div");
 
   grid.className =
     "grid grid-cols-1 lg:grid-cols-2 gap-6";
 
-  grid.append(
-    createField({
-      label: "Item",
-      input: createInput({
-        placeholder:
-          "Nome do item",
-      }),
-    }),
+  const fields = [
+    {
+      label: "Serviço",
+      placeholder: "Ex: Capa Premium",
+    },
+    {
+      label: "Nome do cliente",
+      placeholder: "Nome do cliente",
+    },
+    {
+      label: "Data da compra",
+      placeholder: "Ex: 12/07/2026",
+    },
+    {
+      label: "Contribuinte responsável",
+      placeholder: "Nome do responsável",
+    },
+  ];
 
-    createField({
-      label: "Quantidade",
-      input: createInput({
-        type: "number",
-        placeholder: "1",
-      }),
-    }),
-
-    createField({
-      label: "Valor",
-      input: createInput({
-        placeholder:
-          "Ex: 500",
-      }),
-    }),
-
-    createField({
-      label: "Fornecedor",
-      input: createInput({
-        placeholder:
-          "Nome do fornecedor",
-      }),
-    }),
-
-    createField({
-      label: "Responsável",
-      input: createInput({
-        placeholder:
-          "Quem realizou",
-      }),
-    })
-  );
+  fields.forEach((field) => {
+    grid.appendChild(
+      createField({
+        label: field.label,
+        input: createInput({
+          placeholder: field.placeholder,
+        }),
+      })
+    );
+  });
 
   card.appendChild(grid);
-
-  const obs =
-    createField({
-      label:
-        "Observações",
-      input: createTextarea({
-        placeholder:
-          "Detalhes da compra...",
-      }),
-    });
-
-  obs.classList.add(
-    "mt-6"
-  );
-
-  card.appendChild(obs);
 
   card.appendChild(
     createRemoveButton(card)
@@ -243,67 +207,52 @@ function createCompraCard() {
 ========================================================= */
 
 function createContribuinteCard() {
-  const card =
-    document.createElement(
-      "div"
-    );
+  const card = document.createElement("div");
 
-  card.className =
-    "event-card animate-fade";
+  card.className = "event-card animate-fade";
 
-  const grid =
-    document.createElement(
-      "div"
-    );
+  const grid = document.createElement("div");
 
   grid.className =
-    "grid grid-cols-1 lg:grid-cols-3 gap-6";
+    "grid grid-cols-1 lg:grid-cols-2 gap-6";
 
-  grid.append(
-    createField({
-      label: "Nome",
-      input: createInput({
-        placeholder:
-          "Nome",
-      }),
-    }),
+  const fields = [
+    {
+      label: "Nome do contribuinte",
+      placeholder: "Nome",
+    },
+    {
+      label: "Serviço fornecido",
+      placeholder: "Ex: Banner",
+    },
+    {
+      label: "Prazo de entrega",
+      placeholder: "Ex: 15/07",
+    },
+    {
+      label: "Data da entrega",
+      placeholder: "Ex: 14/07",
+    },
+    {
+      label: "N° de serviços entregues",
+      placeholder: "0",
+      type: "number",
+    },
+  ];
 
-    createField({
-      label:
-        "Serviços realizados",
-      input: createInput({
-        placeholder:
-          "Ex: 4",
-      }),
-    }),
-
-    createField({
-      label:
-        "Entregas realizadas",
-      input: createInput({
-        placeholder:
-          "Ex: 8",
-      }),
-    })
-  );
+  fields.forEach((field) => {
+    grid.appendChild(
+      createField({
+        label: field.label,
+        input: createInput({
+          type: field.type || "text",
+          placeholder: field.placeholder,
+        }),
+      })
+    );
+  });
 
   card.appendChild(grid);
-
-  const obs =
-    createField({
-      label:
-        "Observações",
-      input: createTextarea({
-        placeholder:
-          "Desempenho...",
-      }),
-    });
-
-  obs.classList.add(
-    "mt-6"
-  );
-
-  card.appendChild(obs);
 
   card.appendChild(
     createRemoveButton(card)
@@ -390,29 +339,15 @@ function coletarCompras() {
       "#compras-container .event-card"
     ),
   ].map((card) => {
-    const inputs =
-      card.querySelectorAll(
-        "input"
-      );
-
-    const textarea =
-      card.querySelector(
-        "textarea"
-      );
+    const inputs = card.querySelectorAll("input");
+    const textarea = card.querySelector("textarea");
 
     return {
-      item:
-        inputs[0]?.value || "",
-      quantidade:
-        inputs[1]?.value || "",
-      valor:
-        inputs[2]?.value || "",
-      fornecedor:
-        inputs[3]?.value || "",
-      responsavel:
-        inputs[4]?.value || "",
-      observacoes:
-        textarea?.value || "",
+      servico: inputs[0]?.value || "",
+      cliente: inputs[1]?.value || "",
+      dataCompra: inputs[2]?.value || "",
+      contribuinte: inputs[3]?.value || "",
+      observacoes: textarea?.value || "",
     };
   });
 }
@@ -423,25 +358,16 @@ function coletarContribuintes() {
       "#contribuintes-container .event-card"
     ),
   ].map((card) => {
-    const inputs =
-      card.querySelectorAll(
-        "input"
-      );
-
-    const textarea =
-      card.querySelector(
-        "textarea"
-      );
+    const inputs = card.querySelectorAll("input");
+    const textarea = card.querySelector("textarea");
 
     return {
-      nome:
-        inputs[0]?.value || "",
-      servicos:
-        inputs[1]?.value || "",
-      entregas:
-        inputs[2]?.value || "",
-      observacoes:
-        textarea?.value || "",
+      nome: inputs[0]?.value || "",
+      servico: inputs[1]?.value || "",
+      prazo: inputs[2]?.value || "",
+      entrega: inputs[3]?.value || "",
+      quantidade: inputs[4]?.value || "",
+      observacoes: textarea?.value || "",
     };
   });
 }
@@ -486,7 +412,7 @@ function atualizarMetricas() {
   coletarContribuintes()
     .forEach((item) => {
       servicos += Number(
-        item.servicos || 0
+        item.quantidade || 0
       );
     });
 
