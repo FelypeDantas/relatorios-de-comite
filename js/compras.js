@@ -16,14 +16,6 @@ const faltasContainer =
 const gerarWhatsappButton =
   document.querySelector("#gerar-whatsapp");
 
-const obrasExtras = document.querySelector("#obras-extras").value;
-
-const mes = document.querySelector("#mes").value;
-const ano = document.querySelector("#ano").value;
-
-const observacoes =
-  document.querySelector("#observacoes").value;
-
 /* =========================================================
    MÉTRICAS
 ========================================================= */
