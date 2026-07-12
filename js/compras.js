@@ -564,60 +564,6 @@ document.addEventListener(
 );
 
 /* =========================================================
-   PDF
-========================================================= */
-
-gerarPDFButton?.addEventListener(
-  "click",
-  async () => {
-    try {
-      gerarPDFButton.disabled =
-        true;
-
-      gerarPDFButton.innerHTML =
-        "Gerando PDF...";
-
-      await gerarPDFCompras({
-        mes:
-          document.querySelector(
-            "#mes"
-          ).value,
-
-        ano:
-          document.querySelector(
-            "#ano"
-          ).value,
-
-        compras:
-          coletarCompras(),
-
-        contribuintes:
-          coletarContribuintes(),
-
-        obrasExtras:
-          document.querySelector(
-            "#obras-extras"
-          ).value,
-
-        faltas:
-          coletarFaltas(),
-
-        observacoes:
-          document.querySelector(
-            "#observacoes"
-          ).value,
-      });
-    } finally {
-      gerarPDFButton.disabled =
-        false;
-
-      gerarPDFButton.innerHTML =
-        "📄 Gerar Relatório PDF";
-    }
-  }
-);
-
-/* =========================================================
    INIT
 ========================================================= */
 
