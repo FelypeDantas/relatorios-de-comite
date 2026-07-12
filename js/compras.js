@@ -16,6 +16,14 @@ const faltasContainer =
 const gerarWhatsappButton =
   document.querySelector("#gerar-whatsapp");
 
+const obrasExtras = document.querySelector("#obras-extras").value;
+
+const mes = document.querySelector("#mes").value;
+const ano = document.querySelector("#ano").value;
+
+const observacoes =
+  document.querySelector("#observacoes").value;
+
 /* =========================================================
    MÉTRICAS
 ========================================================= */
@@ -340,14 +348,12 @@ function coletarCompras() {
     ),
   ].map((card) => {
     const inputs = card.querySelectorAll("input");
-    const textarea = card.querySelector("textarea");
 
     return {
       servico: inputs[0]?.value || "",
       cliente: inputs[1]?.value || "",
       dataCompra: inputs[2]?.value || "",
       contribuinte: inputs[3]?.value || "",
-      observacoes: textarea?.value || "",
     };
   });
 }
@@ -359,7 +365,6 @@ function coletarContribuintes() {
     ),
   ].map((card) => {
     const inputs = card.querySelectorAll("input");
-    const textarea = card.querySelector("textarea");
 
     return {
       nome: inputs[0]?.value || "",
@@ -367,7 +372,6 @@ function coletarContribuintes() {
       prazo: inputs[2]?.value || "",
       entrega: inputs[3]?.value || "",
       quantidade: inputs[4]?.value || "",
-      observacoes: textarea?.value || "",
     };
   });
 }
@@ -489,6 +493,8 @@ document.addEventListener(
   atualizarMetricas
 );
 
+gerarWhatsappButton.addEventListener("click", gerarWhatsapp);
+
 /* =========================================================
    INIT
 ========================================================= */
@@ -506,6 +512,76 @@ faltasContainer.appendChild(
 );
 
 atualizarMetricas();
+
+function gerarWhatsapp() {
+  const mes = document.querySelector("#mes").value;
+  const compras = coletarCompras();
+  const contribuintes = coletarContribuintes();
+  const faltas = coletarFaltas();
+
+  const obrasExtras =
+    document.querySelector("#obras-extras").value;
+
+  let mensagem =
+`🌫️💬 Relatório mensal - Comitê de Compra e Venda
+
+♦️ Mês: ${mes}
+
+📇 Compras realizadas:
+`;
+
+  compras.forEach((compra, i) => {
+    mensagem += `
+${i + 1}.
+• Serviço: ${compra.servico}
+• Nome do cliente: ${compra.cliente}
+• Data da compra: ${compra.dataCompra}
+• Contribuinte responsável: ${compra.contribuinte}
+
+`;
+  });
+
+  mensagem += `📇 Contribuintes ativos:
+
+`;
+
+  contribuintes.forEach((c, i) => {
+    mensagem += `
+${i + 1}.
+• Nome do contribuinte: ${c.nome}
+• Serviço fornecido: ${c.servico}
+• Prazo de entrega: ${c.prazo}
+• Data da entrega: ${c.entrega}
+• Nº de serviços entregues: ${c.quantidade}
+
+`;
+  });
+
+  mensagem += `
+♦️ Nº compras realizadas no geral: ${compras.length}
+
+♦️ Obras extras pagas conforme o combinado?
+${obrasExtras || "Nenhuma"}
+
+♦️ Faltas cometidas:
+
+`;
+
+  faltas.forEach((f, i) => {
+    mensagem += `
+${i + 1}.
+🔖 Membro: ${f.membro}
+⁉️ O que aconteceu?: ${f.ocorrido}
+⚠️ Nº de vezes: ${f.quantidade}
+🛑 Aplicou advertência?: ${f.advertencia}
+
+`;
+  });
+
+  navigator.clipboard.writeText(mensagem);
+
+  alert("Relatório copiado para a área de transferência!");
+}
 
 console.log(
   "%c📦 Comitê de Compras iniciado.",
