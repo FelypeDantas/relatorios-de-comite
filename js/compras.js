@@ -13,10 +13,8 @@ const faltasContainer =
     "#faltas-container"
   );
 
-const gerarPDFButton =
-  document.querySelector(
-    "#gerar-pdf"
-  );
+const gerarWhatsappButton =
+  document.querySelector("#gerar-whatsapp");
 
 /* =========================================================
    MÉTRICAS
